@@ -1,0 +1,318 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: 'Manrope', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Custom cursor */
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #1AD1B5;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+
+.custom-cursor.active {
+  transform: translate(-50%, -50%) scale(1.5);
+  background-color: rgba(26, 209, 181, 0.2);
+}
+
+/* Enhanced 3D transforms */
+.perspective-500 {
+  perspective: 800px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.translate-z-100px {
+  transform: translateZ(100px);
+}
+
+.translate-z-neg-100px {
+  transform: translateZ(-100px);
+}
+
+.translate-x-100px {
+  transform: translateX(100px);
+}
+
+.translate-x-neg-100px {
+  transform: translateX(-100px);
+}
+
+.translate-y-100px {
+  transform: translateY(100px);
+}
+
+.translate-y-neg-100px {
+  transform: translateY(-100px);
+}
+
+.rotate-y-90deg {
+  transform: rotateY(90deg);
+}
+
+.rotate-y-neg-90deg {
+  transform: rotateY(-90deg);
+}
+
+.rotate-x-90deg {
+  transform: rotateX(90deg);
+}
+
+.rotate-x-neg-90deg {
+  transform: rotateX(-90deg);
+}
+
+.rotate-y-180deg {
+  transform: rotateY(180deg);
+}
+
+/* Enhanced glow effects */
+.shadow-glow {
+  box-shadow: 0 0 10px rgba(26, 209, 181, 0.5),
+              0 0 20px rgba(26, 209, 181, 0.3),
+              0 0 30px rgba(26, 209, 181, 0.1);
+}
+
+/* Enhanced animations */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* MetaMirror mode effects */
+.dark .animate-glitch {
+  animation: glitch 0.5s ease-in-out;
+}
+
+.meta-gradient {
+  background: linear-gradient(135deg, rgba(26, 209, 181, 0.1) 0%, rgba(26, 209, 181, 0) 100%);
+}
+
+.meta-border {
+  position: relative;
+}
+
+.meta-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(26, 209, 181, 0.2);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Smooth scroll behavior for anchor links */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* Enhanced button styles */
+.btn-meta {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-meta::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  background: rgba(26, 209, 181, 0.2);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: inherit;
+  transition: transform 0.3s ease-out;
+}
+
+.btn-meta:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1) blur(0px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2) blur(1px);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-5px, 5px);
+  }
+  40% {
+    transform: translate(-5px, -5px);
+  }
+  60% {
+    transform: translate(5px, 5px);
+  }
+  80% {
+    transform: translate(5px, -5px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+/* Focus styles for better accessibility */
+:focus-visible {
+  outline: 2px solid #1AD1B5;
+  outline-offset: 2px;
+}
+
+/* Enhanced scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(26, 209, 181, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(26, 209, 181, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 209, 181, 0.5);
+}
+
+/* Improved text selection */
+::selection {
+  background: rgba(26, 209, 181, 0.2);
+  color: inherit;
+}
+
+/* Loading state animations */
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(26, 209, 181, 0.1) 0%,
+    rgba(26, 209, 181, 0.2) 50%,
+    rgba(26, 209, 181, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Improved form element styling */
+input[type="email"],
+input[type="text"],
+textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="email"]:focus,
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #1AD1B5;
+  box-shadow: 0 0 0 2px rgba(26, 209, 181, 0.2);
+}
+
+/* Enhanced card hover effects */
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(26, 209, 181, 0.1);
+}
+
+/* Improved button accessibility */
+button:focus-visible {
+  outline: 2px solid #1AD1B5;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #1AD1B5;
+  color: #000000;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
