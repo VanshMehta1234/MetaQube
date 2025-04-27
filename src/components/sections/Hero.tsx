@@ -15,6 +15,11 @@ const ctaMessages = [
   { id: 6, text: "Accelerate your digital transformation." },
 ];
 
+// Further reduced grid size for better performance
+const GRID_COLS = 4;
+const GRID_ROWS = 4;
+const TOTAL_GRID_CELLS = GRID_COLS * GRID_ROWS;
+
 const Hero: React.FC = () => {
   const { metaMirrorMode, currentCTA, nextCTA, resetToggleOptions } = useAppStore();
   const mousePosition = useMousePosition();
@@ -23,48 +28,148 @@ const Hero: React.FC = () => {
   const mainOrbControls = useAnimation();
   const secondaryOrbControls = useAnimation();
   const pointerControls = useAnimation();
+  const lastUpdateTime = useRef(0);
+  const ctaIntervalRef = useRef<number | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
   
   // Reset toggle options on mount
   useEffect(() => {
     resetToggleOptions();
   }, [resetToggleOptions]);
   
-  // Update normalized mouse coordinates and animate lighting
+  // Handle tab visibility changes with a single listener
   useEffect(() => {
-    if (!sectionRef.current || mousePosition.x === null || mousePosition.y === null) return;
+    const handleVisibilityChange = () => {
+      const visible = !document.hidden;
+      setIsVisible(visible);
+      
+      // When tab becomes visible again, recalculate positions
+      if (visible && sectionRef.current && mousePosition.x !== null && mousePosition.y !== null) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const normalizedX = ((mousePosition.x - rect.left) / rect.width) * 2 - 1;
+        const normalizedY = ((mousePosition.y - rect.top) / rect.height) * 2 - 1;
+        
+        setMouseCoords({ x: normalizedX, y: normalizedY });
+        
+        // Also pause/resume CTA rotation
+        if (!visible) {
+          if (ctaIntervalRef.current) {
+            clearInterval(ctaIntervalRef.current);
+            ctaIntervalRef.current = null;
+          }
+        } else {
+          if (!ctaIntervalRef.current) {
+            ctaIntervalRef.current = window.setInterval(() => nextCTA(), 4000);
+          }
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [mousePosition, nextCTA]);
+  
+  // Process mouse movement with throttling
+  useEffect(() => {
+    if (!sectionRef.current || mousePosition.x === null || mousePosition.y === null || !isVisible) return;
+    
+    const now = Date.now();
+    if (now - lastUpdateTime.current < 50) return; // 50ms throttle
+    
+    lastUpdateTime.current = now;
     
     const rect = sectionRef.current.getBoundingClientRect();
-    const x = ((mousePosition.x - rect.left) / rect.width) * 2 - 1;
-    const y = ((mousePosition.y - rect.top) / rect.height) * 2 - 1;
+    const normalizedX = ((mousePosition.x - rect.left) / rect.width) * 2 - 1;
+    const normalizedY = ((mousePosition.y - rect.top) / rect.height) * 2 - 1;
     
-    setMouseCoords({ x, y });
+    setMouseCoords({ x: normalizedX, y: normalizedY });
     
-    // Directly animate the orbs for better synchronization
-    mainOrbControls.start({
-      left: `calc(50% + ${x * 20}%)`,
-      top: `calc(50% + ${y * 20}%)`,
-    });
-    
-    secondaryOrbControls.start({
-      left: `calc(50% - ${x * 15}%)`,
-      top: `calc(50% - ${y * 15}%)`,
-    });
-    
-    pointerControls.start({
-      left: mousePosition.x,
-      top: mousePosition.y,
-      scale: 1,
-      opacity: metaMirrorMode ? 0.08 : 0.05,
-    });
-  }, [mousePosition, mainOrbControls, secondaryOrbControls, pointerControls, metaMirrorMode]);
+    // Animate elements - only when tab is visible
+    if (isVisible) {
+      mainOrbControls.start({
+        left: `${mousePosition.x}px`,
+        top: `${mousePosition.y}px`,
+        transition: { 
+          type: "spring", 
+          damping: 15, 
+          stiffness: 150,
+          mass: 0.6
+        }
+      });
+      
+      secondaryOrbControls.start({
+        right: `${window.innerWidth - mousePosition.x}px`,
+        bottom: `${window.innerHeight - mousePosition.y}px`,
+        transition: { 
+          type: "spring", 
+          damping: 20, 
+          stiffness: 100,
+          mass: 0.9
+        }
+      });
+      
+      pointerControls.start({
+        left: mousePosition.x,
+        top: mousePosition.y,
+        scale: 1,
+        opacity: metaMirrorMode ? 0.15 : 0.08,
+        transition: {
+          type: "spring",
+          damping: 8,
+          stiffness: 250,
+          mass: 0.2
+        }
+      });
+    }
+  }, [mousePosition, mainOrbControls, secondaryOrbControls, pointerControls, metaMirrorMode, isVisible]);
   
+  // CTA message rotation with improved handling
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextCTA();
-    }, 4000);
+    if (!isVisible) return;
     
-    return () => clearInterval(interval);
-  }, [nextCTA]);
+    // Start the interval
+    ctaIntervalRef.current = window.setInterval(() => nextCTA(), 4000);
+    
+    return () => {
+      if (ctaIntervalRef.current) {
+        clearInterval(ctaIntervalRef.current);
+        ctaIntervalRef.current = null;
+      }
+    };
+  }, [nextCTA, isVisible]);
+  
+  // Memoize the grid cells to avoid recreating them on every render
+  const gridCells = React.useMemo(() => {
+    return Array.from({ length: TOTAL_GRID_CELLS }).map((_, i) => {
+      const colIndex = i % GRID_COLS;
+      const rowIndex = Math.floor(i / GRID_COLS);
+      
+      return (
+        <motion.div 
+          key={i} 
+          className={`border transition-colors duration-300 ${
+            metaMirrorMode ? 'border-metaEmerald-500/10' : 'border-black/10'
+          }`}
+          style={{
+            width: `${100 / GRID_COLS}%`,
+            height: `${100 / GRID_ROWS}%`,
+            position: 'absolute',
+            left: `${(colIndex / GRID_COLS) * 100}%`,
+            top: `${(rowIndex / GRID_ROWS) * 100}%`,
+            opacity: Math.max(0.1, 
+              0.8 - (Math.abs(
+                colIndex / GRID_COLS - 0.5 + mouseCoords.x * 0.3
+              ) + Math.abs(
+                rowIndex / GRID_ROWS - 0.5 + mouseCoords.y * 0.3
+              )) * 0.8
+            )
+          }}
+        />
+      );
+    });
+  }, [mouseCoords.x, mouseCoords.y, metaMirrorMode]);
   
   return (
     <section 
@@ -73,113 +178,77 @@ const Hero: React.FC = () => {
         metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-gradient-to-b from-gray-50 via-white to-white'
       }`}
     >
-      {/* Reactive background lighting */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Gradient orbs that follow mouse movement */}
-        <motion.div 
-          className="absolute rounded-full blur-3xl"
-          animate={mainOrbControls}
-          initial={{
-            left: "50%",
-            top: "50%",
-          }}
-          transition={{ 
-            type: "spring", 
-            damping: 20, 
-            stiffness: 200,
-            mass: 0.8
-          }}
-          style={{
-            background: metaMirrorMode 
-              ? 'radial-gradient(circle, rgba(26, 209, 181, 0.15) 0%, rgba(26, 209, 181, 0) 70%)' 
-              : 'radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 70%)',
-            width: '50vw',
-            height: '50vw',
-            transform: 'translate(-50%, -50%)',
-            opacity: metaMirrorMode ? 0.7 : 1,
-          }}
-        />
-        
-        {/* Secondary glow that moves opposite to mouse */}
-        <motion.div 
-          className="absolute rounded-full blur-3xl"
-          animate={secondaryOrbControls}
-          initial={{
-            left: "50%",
-            top: "50%",
-          }}
-          transition={{ 
-            type: "spring", 
-            damping: 25, 
-            stiffness: 120,
-            mass: 1.2
-          }}
-          style={{
-            background: metaMirrorMode 
-              ? 'radial-gradient(circle, rgba(120, 255, 214, 0.1) 0%, rgba(120, 255, 214, 0) 70%)' 
-              : 'radial-gradient(circle, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0) 75%)',
-            width: '60vw',
-            height: '60vw',
-            transform: 'translate(-50%, -50%)',
-            opacity: metaMirrorMode ? 0.5 : 1,
-          }}
-        />
-        
-        {/* Grid background */}
-        <div 
-          className={`absolute top-0 left-0 w-full h-full grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 grid-rows-6 sm:grid-rows-8 md:grid-rows-12 transition-opacity duration-300 ${
-            metaMirrorMode ? 'opacity-20' : 'opacity-15'
-          }`}
-        >
-          {Array.from({ length: metaMirrorMode ? 144 : 144 }).map((_, i) => (
-            <motion.div 
-              key={i} 
-              className={`border transition-colors duration-300 ${
-                metaMirrorMode ? 'border-metaEmerald-500/10' : 'border-black/10'
-              }`}
-              animate={{
-                opacity: Math.max(0.1, 
-                  0.5 - (Math.abs(
-                    (i % 12) / 12 - 0.5 + mouseCoords.x * 0.2
-                  ) + Math.abs(
-                    Math.floor(i / 12) / 12 - 0.5 + mouseCoords.y * 0.2
-                  )) * 0.6
-                )
-              }}
-              transition={{
-                duration: 0.05,
-                ease: "linear"
-              }}
-            />
-          ))}
+      {/* Only render animations when tab is visible */}
+      {isVisible && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Gradient orbs that follow mouse movement */}
+          <motion.div 
+            className="absolute rounded-full blur-3xl will-change-transform"
+            animate={mainOrbControls}
+            initial={{
+              left: "50%",
+              top: "50%",
+            }}
+            style={{
+              background: metaMirrorMode 
+                ? 'radial-gradient(circle, rgba(26, 209, 181, 0.25) 0%, rgba(26, 209, 181, 0) 70%)' 
+                : 'radial-gradient(circle, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0) 70%)',
+              width: '60vw',
+              height: '60vw',
+              transform: 'translate(-50%, -50%)',
+              opacity: metaMirrorMode ? 0.9 : 1,
+              transformOrigin: 'center center',
+              position: 'absolute'
+            }}
+          />
+          
+          {/* Secondary glow that moves opposite to mouse */}
+          <motion.div 
+            className="absolute rounded-full blur-3xl will-change-transform"
+            animate={secondaryOrbControls}
+            initial={{
+              right: "50%",
+              bottom: "50%",
+            }}
+            style={{
+              background: metaMirrorMode 
+                ? 'radial-gradient(circle, rgba(120, 255, 214, 0.15) 0%, rgba(120, 255, 214, 0) 70%)' 
+                : 'radial-gradient(circle, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 75%)',
+              width: '70vw',
+              height: '70vw',
+              transform: 'translate(50%, 50%)',
+              opacity: metaMirrorMode ? 0.7 : 1,
+              transformOrigin: 'center center',
+              position: 'absolute'
+            }}
+          />
+          
+          {/* Simplified grid background with optimized rendering */}
+          <div className="absolute inset-0 opacity-10">
+            {gridCells}
+          </div>
+          
+          {/* Pointer highlight effect */}
+          <motion.div
+            className="absolute rounded-full pointer-events-none will-change-transform"
+            animate={pointerControls}
+            initial={{
+              left: "50%",
+              top: "50%",
+              scale: 0,
+              opacity: 0
+            }}
+            style={{
+              background: metaMirrorMode 
+                ? 'radial-gradient(circle, rgba(26, 209, 181, 1) 0%, rgba(26, 209, 181, 0) 70%)'
+                : 'radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%)',
+              width: '15rem',
+              height: '15rem',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
         </div>
-        
-        {/* Pointer highlight effect */}
-        <motion.div
-          className="absolute rounded-full pointer-events-none"
-          animate={pointerControls}
-          initial={{
-            left: "50%",
-            top: "50%",
-            scale: 0,
-            opacity: 0
-          }}
-          transition={{
-            type: "spring",
-            damping: 12,
-            stiffness: 300,
-            mass: 0.2
-          }}
-          style={{
-            background: metaMirrorMode 
-              ? 'radial-gradient(circle, rgba(26, 209, 181, 1) 0%, rgba(26, 209, 181, 0) 70%)'
-              : 'radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 70%)',
-            width: '12rem',
-            height: '12rem',
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      </div>
+      )}
       
       <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center">
         <motion.div
@@ -264,4 +333,5 @@ const Hero: React.FC = () => {
   );
 };
 
-export default Hero;
+// Use React.memo for component memoization
+export default React.memo(Hero);

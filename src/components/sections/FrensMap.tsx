@@ -18,28 +18,28 @@ const getLogoIcon = (id: number) => {
   }
 };
 
-// Backup logos in case external URLs don't work due to CORS restrictions
+// Use local logos instead of external URLs to avoid CORS issues
 const backupLogos = {
-  'Buildspace': 'https://cdn.iconscout.com/icon/free/png-256/free-buildspace-9338888-7658912.png',
-  'Coinbase': 'https://cdn.iconscout.com/icon/free/png-256/free-coinbase-9419559-7749221.png',
-  'Paradigm': 'https://cryptologos.cc/logos/bitcoin-btc-logo.png',
-  'Uniswap': 'https://cdn.iconscout.com/icon/premium/png-256-thumb/uniswap-4441964-3679215.png',
-  'Opensea': 'https://cdn.iconscout.com/icon/free/png-256/free-opensea-9879568-8061245.png',
-  'Foundation': 'https://cryptologos.cc/logos/nft-logo.png',
-  'MetaMask': 'https://cdn.iconscout.com/icon/free/png-256/free-metamask-2728406-2261817.png',
-  'Polygon': 'https://cdn.iconscout.com/icon/free/png-256/free-polygon-token-4086723-3379854.png'
+  'Buildspace': '/logos/building-logo.png',
+  'Coinbase': '/logos/coinbase-logo.png',
+  'Paradigm': '/logos/bitcoin-btc-logo.png', // Changed to local file
+  'Uniswap': '/logos/uniswap-logo.png',
+  'Opensea': '/logos/opensea-logo.png',
+  'Foundation': '/logos/nft-logo.png', // Changed to local file
+  'MetaMask': '/logos/metamask-logo.png',
+  'Polygon': '/logos/polygon-logo.png'
 };
 
 // Primary logo URLs with alternatives for better loading
 const primaryLogos = {
-  'Buildspace': 'https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg',
+  'Buildspace': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg',
   'Coinbase': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg',
-  'Paradigm': 'https://cdn.worldvectorlogo.com/logos/paradigm-2.svg',
-  'Uniswap': 'https://cdn.worldvectorlogo.com/logos/uniswap-uni-logo.svg',
-  'Opensea': 'https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg',
-  'Foundation': 'https://cdn.worldvectorlogo.com/logos/foundation-42.svg',
-  'MetaMask': 'https://cdn.worldvectorlogo.com/logos/metamask.svg',
-  'Polygon': 'https://cdn.worldvectorlogo.com/logos/polygon-matic.svg'
+  'Paradigm': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg', // Changed to local file
+  'Uniswap': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg',
+  'Opensea': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg',
+  'Foundation': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg', // Changed to local file
+  'MetaMask': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg',
+  'Polygon': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg'
 };
 
 // Company-specific logo styles
@@ -238,7 +238,9 @@ const FrensMap: React.FC = () => {
                       e.currentTarget.onerror = null;
                       // Try backup logo first
                       if (backupLogos[fren.name as keyof typeof backupLogos]) {
-                        e.currentTarget.src = backupLogos[fren.name as keyof typeof backupLogos];
+                        // Add public path prefix if not already present
+                        const backupSrc = backupLogos[fren.name as keyof typeof backupLogos];
+                        e.currentTarget.src = backupSrc.startsWith('/') ? backupSrc : `/${backupSrc}`;
                       } else {
                         // If backup fails, hide the image and show the icon
                         e.currentTarget.style.display = 'none';

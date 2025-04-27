@@ -25,10 +25,10 @@ const ToggleGroup: React.FC = () => {
   }, [toggleOptions]);
   
   return (
-    <div className={`relative p-4 sm:p-6 md:p-8 rounded-xl backdrop-blur-sm shadow-xl ${
+    <div className={`relative p-4 sm:p-6 md:p-8 rounded-xl backdrop-blur-sm ${
       metaMirrorMode 
-        ? 'bg-deepCosmos-800/50 border border-deepCosmos-700' 
-        : 'bg-white border border-gray-100'
+        ? 'border-deepCosmos-700' 
+        : 'border-gray-100'
     }`}>
       <div className="flex flex-col items-center space-y-5 md:space-y-6">
         <h2 className={`text-xl sm:text-2xl font-bold ${
