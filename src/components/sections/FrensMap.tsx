@@ -1,93 +1,130 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
+import { BookOpen, Coins, Briefcase, ArrowRightLeft, Image, Palette, Wallet, Layers } from 'lucide-react';
+
+// Generate custom SVG logo for each partner
+const getLogoIcon = (id: number) => {
+  switch(id) {
+    case 1: return <BookOpen size={32} className="text-inherit" />;
+    case 2: return <Coins size={32} className="text-inherit" />;
+    case 3: return <Briefcase size={32} className="text-inherit" />;
+    case 4: return <ArrowRightLeft size={32} className="text-inherit" />;
+    case 5: return <Image size={32} className="text-inherit" />;
+    case 6: return <Palette size={32} className="text-inherit" />;
+    case 7: return <Wallet size={32} className="text-inherit" />;
+    case 8: return <Layers size={32} className="text-inherit" />;
+    default: return <div className="text-inherit">Logo</div>;
+  }
+};
+
+// Backup logos in case external URLs don't work due to CORS restrictions
+const backupLogos = {
+  'Buildspace': 'https://cdn.iconscout.com/icon/free/png-256/free-buildspace-9338888-7658912.png',
+  'Coinbase': 'https://cdn.iconscout.com/icon/free/png-256/free-coinbase-9419559-7749221.png',
+  'Paradigm': 'https://cryptologos.cc/logos/bitcoin-btc-logo.png',
+  'Uniswap': 'https://cdn.iconscout.com/icon/premium/png-256-thumb/uniswap-4441964-3679215.png',
+  'Opensea': 'https://cdn.iconscout.com/icon/free/png-256/free-opensea-9879568-8061245.png',
+  'Foundation': 'https://cryptologos.cc/logos/nft-logo.png',
+  'MetaMask': 'https://cdn.iconscout.com/icon/free/png-256/free-metamask-2728406-2261817.png',
+  'Polygon': 'https://cdn.iconscout.com/icon/free/png-256/free-polygon-token-4086723-3379854.png'
+};
+
+// Primary logo URLs with alternatives for better loading
+const primaryLogos = {
+  'Buildspace': 'https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg',
+  'Coinbase': 'http://upload.wikimedia.org/wikipedia/commons/1/1a/Coinbase.svg',
+  'Paradigm': 'https://cdn.worldvectorlogo.com/logos/paradigm-2.svg',
+  'Uniswap': 'https://cdn.worldvectorlogo.com/logos/uniswap-uni-logo.svg',
+  'Opensea': 'https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg',
+  'Foundation': 'https://cdn.worldvectorlogo.com/logos/foundation-42.svg',
+  'MetaMask': 'https://cdn.worldvectorlogo.com/logos/metamask.svg',
+  'Polygon': 'https://cdn.worldvectorlogo.com/logos/polygon-matic.svg'
+};
+
+// Company-specific logo styles
+const logoStyles = {
+  'Buildspace': 'bg-emerald-100',
+  'Coinbase': 'bg-blue-50',
+  'Paradigm': 'bg-gray-50',
+  'Uniswap': 'bg-pink-50',
+  'Opensea': 'bg-blue-50',
+  'Foundation': 'bg-gray-50',
+  'MetaMask': 'bg-orange-50',
+  'Polygon': 'bg-purple-50'
+};
 
 const frens = [
   { 
     id: 1, 
     name: 'Buildspace', 
-    logo: 'https://pbs.twimg.com/profile_images/1597722660778713091/xs2vcEwG_400x400.jpg',
-    year: '2023',
+    logo: primaryLogos.Buildspace || 'https://pbs.twimg.com/profile_images/1597722660778713091/xs2vcEwG_400x400.jpg',
     description: 'Web3 educational platform',
     category: 'Education'
   },
   { 
     id: 2, 
     name: 'Coinbase', 
-    logo: 'https://images.ctfassets.net/q5ulk4bp65r7/3TBS4oVkD1ghowTqVQJlqj/2dfd4ea3b623a7c0d8deb2ff445dee9e/Consumer_Wordmark.svg',
-    year: '2022',
+    logo: primaryLogos.Coinbase || 'https://images.ctfassets.net/q5ulk4bp65r7/3TBS4oVkD1ghowTqVQJlqj/2dfd4ea3b623a7c0d8deb2ff445dee9e/Consumer_Wordmark.svg',
     description: 'Cryptocurrency exchange',
     category: 'Exchange'
   },
   { 
     id: 3, 
     name: 'Paradigm', 
-    logo: 'https://pbs.twimg.com/profile_images/1455877348584677380/JbAFThFU_400x400.jpg',
-    year: '2022',
+    logo: primaryLogos.Paradigm || 'https://pbs.twimg.com/profile_images/1455877348584677380/JbAFThFU_400x400.jpg',
     description: 'Crypto/Web3 investment firm',
     category: 'Investment'
   },
   { 
     id: 4, 
     name: 'Uniswap', 
-    logo: 'https://pbs.twimg.com/profile_images/1668966382064771072/AtPAyYR7_400x400.jpg',
-    year: '2021',
+    logo: primaryLogos.Uniswap || 'https://pbs.twimg.com/profile_images/1668966382064771072/AtPAyYR7_400x400.jpg',
     description: 'Decentralized exchange protocol',
     category: 'DeFi'
   },
   { 
     id: 5, 
     name: 'Opensea', 
-    logo: 'https://pbs.twimg.com/profile_images/1544105652330631168/ZuvjfGkT_400x400.jpg',
-    year: '2021',
+    logo: primaryLogos.Opensea || 'https://pbs.twimg.com/profile_images/1544105652330631168/ZuvjfGkT_400x400.jpg',
     description: 'NFT marketplace',
     category: 'NFT'
   },
   { 
     id: 6, 
     name: 'Foundation', 
-    logo: 'https://pbs.twimg.com/profile_images/1566716087489298432/QdcE-0K6_400x400.jpg',
-    year: '2020',
+    logo: primaryLogos.Foundation || 'https://pbs.twimg.com/profile_images/1566716087489298432/QdcE-0K6_400x400.jpg',
     description: 'Creative platform for NFTs',
     category: 'NFT'
   },
   { 
     id: 7, 
     name: 'MetaMask', 
-    logo: 'https://pbs.twimg.com/profile_images/1649367870122852352/QqR3SmPn_400x400.png',
-    year: '2023',
+    logo: primaryLogos.MetaMask || 'https://pbs.twimg.com/profile_images/1649367870122852352/QqR3SmPn_400x400.png',
     description: 'Web3 wallet and gateway',
     category: 'Wallet'
   },
   { 
     id: 8, 
     name: 'Polygon', 
-    logo: 'https://pbs.twimg.com/profile_images/1726642545989861376/OFTLCe4c_400x400.jpg', 
-    year: '2023',
+    logo: primaryLogos.Polygon || 'https://pbs.twimg.com/profile_images/1726642545989861376/OFTLCe4c_400x400.jpg', 
     description: 'Ethereum scaling platform',
     category: 'Infrastructure'
   },
 ];
 
 const categories = Array.from(new Set(frens.map(fren => fren.category)));
-const years = Array.from(new Set(frens.map(fren => fren.year))).sort().reverse();
 
 const FrensMap: React.FC = () => {
   const { metaMirrorMode } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
   
   const filteredFrens = frens.filter(fren => 
-    (!selectedCategory || fren.category === selectedCategory) &&
-    (!selectedYear || fren.year === selectedYear)
+    (!selectedCategory || fren.category === selectedCategory)
   );
   
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(selectedCategory === category ? null : category);
-  };
-  
-  const handleYearClick = (year: string) => {
-    setSelectedYear(selectedYear === year ? null : year);
   };
   
   return (
@@ -122,14 +159,14 @@ const FrensMap: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className={`text-4xl font-bold mb-4 ${
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className={`text-3xl sm:text-4xl font-bold mb-3 sm:mb-4 ${
             metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
           }`}>
             Our <span className="text-metaEmerald-500">Frens</span>
           </h2>
-          <p className={`text-lg max-w-2xl mx-auto ${
-            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
+          <p className={`text-base sm:text-lg max-w-2xl mx-auto ${
+            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-700'
           }`}>
             Building alongside the best in the industry to create the future of digital experiences.
           </p>
@@ -142,7 +179,9 @@ const FrensMap: React.FC = () => {
                 onClick={() => handleCategoryClick(category)}
                 className={`px-3 py-1 rounded-full text-sm transition-colors ${
                   selectedCategory === category
-                    ? 'bg-metaEmerald-500 text-deepCosmos-900'
+                    ? metaMirrorMode
+                      ? 'bg-metaEmerald-500 text-deepCosmos-900'
+                      : 'bg-black text-white'
                     : metaMirrorMode
                       ? 'bg-deepCosmos-700 text-quantumGrey-300 hover:bg-deepCosmos-600'
                       : 'bg-prismWhite text-deepCosmos-700 hover:bg-quantumGrey-200'
@@ -154,32 +193,11 @@ const FrensMap: React.FC = () => {
               </motion.button>
             ))}
           </div>
-          
-          {/* Year Filters */}
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            {years.map((year) => (
-              <motion.button
-                key={year}
-                onClick={() => handleYearClick(year)}
-                className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                  selectedYear === year
-                    ? 'bg-metaEmerald-500 text-deepCosmos-900'
-                    : metaMirrorMode
-                      ? 'bg-deepCosmos-700 text-quantumGrey-300 hover:bg-deepCosmos-600'
-                      : 'bg-prismWhite text-deepCosmos-700 hover:bg-quantumGrey-200'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {year}
-              </motion.button>
-            ))}
-          </div>
         </div>
         
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           {filteredFrens.map((fren, index) => (
             <motion.div
@@ -191,28 +209,54 @@ const FrensMap: React.FC = () => {
               transition={{ duration: 0.3, delay: index * 0.1 }}
               className={`${
                 metaMirrorMode ? 'bg-deepCosmos-800' : 'bg-prismWhite'
-              } p-6 rounded-lg shadow-lg border ${
+              } p-5 sm:p-6 rounded-lg shadow-lg border ${
                 metaMirrorMode ? 'border-deepCosmos-700' : 'border-quantumGrey-200'
               } hover:border-metaEmerald-500 transition-all relative group`}
+              whileHover={{ 
+                y: -5,
+                boxShadow: metaMirrorMode 
+                  ? '0 15px 30px -10px rgba(0, 0, 0, 0.5)'
+                  : '0 15px 30px -10px rgba(0, 0, 0, 0.1)'
+              }}
             >
               <div className="absolute inset-0 bg-metaEmerald-500 opacity-0 group-hover:opacity-5 transition-opacity rounded-lg" />
               
               <motion.div 
-                className="w-20 h-20 mx-auto mb-4 relative"
+                className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 relative"
                 whileHover={{ rotate: 360, scale: 1.1 }}
                 transition={{ duration: 0.5 }}
               >
                 <div className="absolute inset-0 bg-metaEmerald-500 rounded-full opacity-10 animate-pulse" />
-                <img 
-                  src={fren.logo} 
-                  alt={fren.name} 
-                  className="w-full h-full object-contain relative z-10 rounded-full bg-white p-2"
-                />
+                <div className={`w-full h-full relative z-10 rounded-full ${
+                  logoStyles[fren.name as keyof typeof logoStyles] || 'bg-white'
+                } p-2 flex items-center justify-center overflow-hidden border border-gray-100`}>
+                  <img 
+                    src={fren.logo} 
+                    alt={fren.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      // Try backup logo first
+                      if (backupLogos[fren.name as keyof typeof backupLogos]) {
+                        e.currentTarget.src = backupLogos[fren.name as keyof typeof backupLogos];
+                      } else {
+                        // If backup fails, hide the image and show the icon
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.parentElement?.classList.add('show-icon');
+                      }
+                    }}
+                  />
+                  <div className={`absolute inset-0 items-center justify-center ${
+                    metaMirrorMode ? "text-metaEmerald-500" : "text-metaEmerald-700"
+                  } hidden show-icon:flex`}>
+                    {getLogoIcon(fren.id)}
+                  </div>
+                </div>
               </motion.div>
               
               <div className="text-center relative z-10">
                 <motion.h3 
-                  className={`text-xl font-bold mb-2 ${
+                  className={`text-lg sm:text-xl font-bold mb-2 ${
                     metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
                   }`}
                   whileHover={{ scale: 1.05 }}
@@ -220,22 +264,18 @@ const FrensMap: React.FC = () => {
                   {fren.name}
                 </motion.h3>
                 <p className={`text-sm mb-3 ${
-                  metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
+                  metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-700'
                 }`}>
                   {fren.description}
                 </p>
-                <div className="flex items-center justify-center space-x-2">
+                <div className="flex items-center justify-center">
                   <motion.span 
-                    className="px-2 py-1 text-xs rounded-full bg-metaEmerald-500/20 text-metaEmerald-500"
+                    className={`px-2 py-1 text-xs rounded-full ${
+                      metaMirrorMode ? 'bg-metaEmerald-500/20 text-metaEmerald-500' : 'bg-metaEmerald-700/20 text-metaEmerald-700'
+                    }`}
                     whileHover={{ scale: 1.1 }}
                   >
                     {fren.category}
-                  </motion.span>
-                  <motion.span 
-                    className="px-2 py-1 text-xs rounded-full bg-metaEmerald-500/10 text-metaEmerald-500"
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    {fren.year}
                   </motion.span>
                 </div>
               </div>

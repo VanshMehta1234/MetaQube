@@ -121,5 +121,9 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addVariant }) {
+      addVariant('show-icon', '&.show-icon');
+    }
+  ],
 };
