@@ -174,7 +174,7 @@ const Hero: React.FC = () => {
   return (
     <section 
       ref={sectionRef}
-      className={`relative min-h-screen flex flex-col items-center justify-center pt-8 sm:pt-10 md:pt-12 overflow-hidden transition-colors duration-500 ${
+      className={`relative min-h-screen flex flex-col items-center justify-center pt-20 sm:pt-24 md:pt-28 overflow-hidden transition-colors duration-500 ${
         metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-gradient-to-b from-gray-50 via-white to-white'
       }`}
     >
@@ -252,7 +252,7 @@ const Hero: React.FC = () => {
       
       <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center">
         <motion.div
-          className="text-center mb-6 sm:mb-8 md:mb-10 mt-8 sm:mt-12 md:mt-16"
+          className="text-center mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -267,7 +267,7 @@ const Hero: React.FC = () => {
             }`}>METAQUBE</span>
           </motion.h1>
           <motion.p 
-            className={`text-lg sm:text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 ${
+            className={`text-base sm:text-lg md:text-xl max-w-md sm:max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 ${
               metaMirrorMode ? 'text-quantumGrey-200' : 'text-gray-800'
             }`}
           >
@@ -283,7 +283,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-8 sm:mb-12 md:mb-16 w-full max-w-[300px] sm:max-w-[350px] md:max-w-[400px] mx-auto"
+          className="mb-8 sm:mb-12 md:mb-16 w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] mx-auto"
         >
           <HeroCube />
         </motion.div>
@@ -293,7 +293,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-10 sm:mb-16 md:mb-20 w-full max-w-[340px] sm:max-w-lg md:max-w-xl px-2 sm:px-4"
+          className="mb-8 sm:mb-12 md:mb-16 w-full max-w-[280px] sm:max-w-lg md:max-w-xl px-2 sm:px-4"
         >
           <ToggleGroup />
         </motion.div>

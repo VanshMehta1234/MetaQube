@@ -25,24 +25,24 @@ const ToggleGroup: React.FC = () => {
   }, [toggleOptions]);
   
   return (
-    <div className={`relative p-4 sm:p-6 md:p-8 rounded-xl backdrop-blur-sm ${
+    <div className={`relative p-3 sm:p-5 md:p-6 rounded-xl backdrop-blur-sm border ${
       metaMirrorMode 
         ? 'border-deepCosmos-700' 
         : 'border-gray-100'
     }`}>
-      <div className="flex flex-col items-center space-y-5 md:space-y-6">
-        <h2 className={`text-xl sm:text-2xl font-bold ${
+      <div className="flex flex-col items-center space-y-4 md:space-y-5">
+        <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${
           metaMirrorMode ? 'text-prismWhite' : 'text-black'
         }`}>Project Parameters</h2>
         
-        <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
           {toggleOptions.map((option) => {
             const isActive = option.active;
             return (
               <motion.button
                 key={option.id}
                 onClick={() => updateToggleOption(option.id, !isActive)}
-                className={`relative px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 rounded-lg text-base sm:text-lg font-semibold transition-all overflow-hidden w-[100px] sm:w-[110px] md:w-[120px]
+                className={`relative px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-sm sm:text-base md:text-lg font-semibold transition-all overflow-hidden w-[90px] sm:w-[100px] md:w-[110px]
                   ${isActive 
                     ? metaMirrorMode
                       ? 'bg-metaEmerald-500 text-deepCosmos-900 shadow-lg' 
@@ -82,7 +82,7 @@ const ToggleGroup: React.FC = () => {
                 {/* Active indicator */}
                 {isActive && (
                   <motion.div
-                    className={`absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${
+                    className={`absolute right-2 top-1/2 -translate-y-1/2 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${
                       metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-white'
                     }`}
                     layoutId={`indicator-${option.id}`}
@@ -100,7 +100,7 @@ const ToggleGroup: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
-            className={`text-center text-base sm:text-lg font-medium mt-1 sm:mt-2 ${
+            className={`text-center text-sm sm:text-base md:text-lg font-medium mt-1 ${
               metaMirrorMode ? 'text-metaEmerald-400' : 'text-gray-900'
             }`}
           >
