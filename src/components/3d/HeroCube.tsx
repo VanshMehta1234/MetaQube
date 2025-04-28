@@ -135,9 +135,9 @@ const HeroCube: React.FC = () => {
   return (
     <div className="relative flex items-center justify-center w-full h-80 sm:h-96">
       {/* Simplified grid background */}
-      <div className="absolute inset-0 opacity-20">
+      {/* <div className="absolute inset-0 opacity-20">
         {gridCells}
-      </div>
+      </div> */}
       
       {/* Single optimized glow effect */}
       {isVisible && (

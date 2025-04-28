@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Label from '@radix-ui/react-label';
 import * as Select from '@radix-ui/react-select';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronDown } from 'lucide-react';
+import { X, ChevronDown, Check } from 'lucide-react';
 import { format, addDays } from 'date-fns';
 
 interface ScheduleCallDialogProps {
@@ -55,6 +55,16 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
     '9:00 AM', '10:00 AM', '11:00 AM',
     '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'
   ];
+
+  // Project types
+  const projectTypes = [
+    { value: 'web3', label: 'Web3 Development' },
+    { value: 'brand', label: 'Brand Consultation' },
+    { value: 'dev', label: 'Dev Sprint' },
+    { value: 'metaverse', label: 'Metaverse Experience' },
+    { value: 'ai', label: 'AI Development' },
+    { value: 'digital', label: 'Digital Transformation' }
+  ];
   
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -63,7 +73,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
           <Dialog.Portal forceMount>
             <Dialog.Overlay asChild>
               <motion.div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -72,7 +82,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
             
             <Dialog.Content asChild>
               <motion.div
-                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-deepCosmos-800 rounded-xl shadow-xl p-6 z-50"
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-lg bg-deepCosmos-800 rounded-xl shadow-xl p-6 z-[101]"
                 initial={{ opacity: 0, scale: 0.95, y: '-45%' }}
                 animate={{ opacity: 1, scale: 1, y: '-50%' }}
                 exit={{ opacity: 0, scale: 0.95, y: '-45%' }}
@@ -143,30 +153,35 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                       </Select.Trigger>
                       
                       <Select.Portal>
-                        <Select.Content className="bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg overflow-hidden">
-                          <Select.Viewport>
-                            <Select.Item value="web3" className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer">
-                              <Select.ItemText>Web3 Product</Select.ItemText>
-                            </Select.Item>
-                            <Select.Item value="brand" className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer">
-                              <Select.ItemText>Brand Design</Select.ItemText>
-                            </Select.Item>
-                            <Select.Item value="dev" className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer">
-                              <Select.ItemText>Dev Sprint</Select.ItemText>
-                            </Select.Item>
-                            <Select.Item value="metaverse" className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer">
-                              <Select.ItemText>Metaverse</Select.ItemText>
-                            </Select.Item>
-                            <Select.Item value="ai" className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer">
-                              <Select.ItemText>AI Integration</Select.ItemText>
-                            </Select.Item>
+                        <Select.Content position="popper" sideOffset={5} className="bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg overflow-hidden shadow-lg z-[200]">
+                          <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-deepCosmos-600 cursor-default">
+                            <ChevronDown className="transform rotate-180 text-prismWhite" size={16} />
+                          </Select.ScrollUpButton>
+                          
+                          <Select.Viewport className="p-1">
+                            {projectTypes.map((type) => (
+                              <Select.Item 
+                                key={type.value} 
+                                value={type.value} 
+                                className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-500/20 data-[highlighted]:bg-metaEmerald-500/20 rounded-md cursor-pointer flex items-center"
+                              >
+                                <Select.ItemText>{type.label}</Select.ItemText>
+                                <Select.ItemIndicator className="absolute right-2 inline-flex items-center justify-center">
+                                  <Check size={16} className="text-metaEmerald-500" />
+                                </Select.ItemIndicator>
+                              </Select.Item>
+                            ))}
                           </Select.Viewport>
+                          
+                          <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-deepCosmos-600 cursor-default">
+                            <ChevronDown className="text-prismWhite" size={16} />
+                          </Select.ScrollDownButton>
                         </Select.Content>
                       </Select.Portal>
                     </Select.Root>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label.Root className="text-sm font-medium text-quantumGrey-300 mb-1 block">
                         Date
@@ -183,18 +198,29 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                         </Select.Trigger>
                         
                         <Select.Portal>
-                          <Select.Content className="bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg overflow-hidden">
-                            <Select.Viewport>
+                          <Select.Content position="popper" sideOffset={5} className="bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg overflow-hidden shadow-lg z-[200]">
+                            <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-deepCosmos-600 cursor-default">
+                              <ChevronDown className="transform rotate-180 text-prismWhite" size={16} />
+                            </Select.ScrollUpButton>
+                            
+                            <Select.Viewport className="p-1">
                               {dateOptions.map((date) => (
                                 <Select.Item
                                   key={date}
                                   value={date}
-                                  className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer"
+                                  className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-500/20 data-[highlighted]:bg-metaEmerald-500/20 rounded-md cursor-pointer flex items-center"
                                 >
                                   <Select.ItemText>{date}</Select.ItemText>
+                                  <Select.ItemIndicator className="absolute right-2 inline-flex items-center justify-center">
+                                    <Check size={16} className="text-metaEmerald-500" />
+                                  </Select.ItemIndicator>
                                 </Select.Item>
                               ))}
                             </Select.Viewport>
+                            
+                            <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-deepCosmos-600 cursor-default">
+                              <ChevronDown className="text-prismWhite" size={16} />
+                            </Select.ScrollDownButton>
                           </Select.Content>
                         </Select.Portal>
                       </Select.Root>
@@ -216,18 +242,29 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                         </Select.Trigger>
                         
                         <Select.Portal>
-                          <Select.Content className="bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg overflow-hidden">
-                            <Select.Viewport>
+                          <Select.Content position="popper" sideOffset={5} className="bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg overflow-hidden shadow-lg z-[200]">
+                            <Select.ScrollUpButton className="flex items-center justify-center h-6 bg-deepCosmos-600 cursor-default">
+                              <ChevronDown className="transform rotate-180 text-prismWhite" size={16} />
+                            </Select.ScrollUpButton>
+                            
+                            <Select.Viewport className="p-1">
                               {timeSlots.map((time) => (
                                 <Select.Item
                                   key={time}
                                   value={time}
-                                  className="px-4 py-2 text-prismWhite hover:bg-deepCosmos-600 cursor-pointer"
+                                  className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-500/20 data-[highlighted]:bg-metaEmerald-500/20 rounded-md cursor-pointer flex items-center"
                                 >
                                   <Select.ItemText>{time}</Select.ItemText>
+                                  <Select.ItemIndicator className="absolute right-2 inline-flex items-center justify-center">
+                                    <Check size={16} className="text-metaEmerald-500" />
+                                  </Select.ItemIndicator>
                                 </Select.Item>
                               ))}
                             </Select.Viewport>
+                            
+                            <Select.ScrollDownButton className="flex items-center justify-center h-6 bg-deepCosmos-600 cursor-default">
+                              <ChevronDown className="text-prismWhite" size={16} />
+                            </Select.ScrollDownButton>
                           </Select.Content>
                         </Select.Portal>
                       </Select.Root>

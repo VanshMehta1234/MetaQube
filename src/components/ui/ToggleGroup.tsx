@@ -25,7 +25,7 @@ const ToggleGroup: React.FC = () => {
   }, [toggleOptions]);
   
   return (
-    <div className={`relative p-3 sm:p-5 md:p-6 rounded-xl backdrop-blur-sm border ${
+    <div className={`relative p-3 sm:p-5 md:p-6 rounded-xl backdrop-blur-sm ${
       metaMirrorMode 
         ? 'border-deepCosmos-700' 
         : 'border-gray-100'

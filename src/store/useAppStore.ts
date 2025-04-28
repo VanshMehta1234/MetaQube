@@ -9,7 +9,6 @@ interface AppState {
   qubeOptions: QubeBuildOption[];
   currentCTA: number;
   assembling: boolean;
-  toggleMetaMirrorMode: () => void;
   setDarkMode: (value: boolean) => void;
   updateToggleOption: (id: string, active: boolean) => void;
   findEasterEggFragment: (id: string) => void;
@@ -22,8 +21,8 @@ interface AppState {
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
-  darkMode: false,
-  metaMirrorMode: false,
+  darkMode: true,
+  metaMirrorMode: true,
   assembling: false,
   toggleOptions: [
     { id: 'fast', label: 'Fast', active: false },
@@ -69,39 +68,73 @@ export const useAppStore = create<AppState>((set, get) => ({
   ],
   currentCTA: 0,
 
-  toggleMetaMirrorMode: () => {
-    set((state) => ({ 
-      metaMirrorMode: !state.metaMirrorMode,
-      darkMode: !state.metaMirrorMode ? true : state.darkMode,
+  setDarkMode: (value) => set({ darkMode: value }),
+
+  updateToggleOption: (id, active) => {
+    // Get current toggle options
+    const { toggleOptions } = get();
+    
+    // Count how many are currently active
+    const activeCount = toggleOptions.filter(o => o.active).length;
+    
+    // If trying to activate and already at 2 active, find one to deactivate
+    if (active && activeCount >= 2) {
+      // Find currently active options that aren't this one
+      const otherActiveOptions = toggleOptions
+        .filter(o => o.active && o.id !== id);
+      
+      // If there are 2 or more other active options, deactivate the first one
+      if (otherActiveOptions.length > 0) {
+        set({
+          toggleOptions: toggleOptions.map(o => {
+            if (o.id === id) return { ...o, active };
+            if (o.id === otherActiveOptions[0].id) return { ...o, active: false };
+            return o;
+          })
+        });
+        return;
+      }
+    }
+    
+    // Otherwise just toggle the option
+    set({
+      toggleOptions: toggleOptions.map(o =>
+        o.id === id ? { ...o, active } : o
+      )
+    });
+  },
+
+  findEasterEggFragment: (id) => {
+    set(state => ({
+      easterEggFragments: state.easterEggFragments.map(f =>
+        f.id === id ? { ...f, found: true } : f
+      )
     }));
   },
 
-  setDarkMode: (value) => set({ darkMode: value }),
+  selectQubeOption: (id) => {
+    set(state => ({
+      qubeOptions: state.qubeOptions.map(option =>
+        option.id === id 
+          ? { ...option, selected: !option.selected } 
+          : option
+      )
+    }));
+  },
 
-  setAssembling: (value) => set({ assembling: value }),
+  nextCTA: () => {
+    set(state => ({
+      currentCTA: (state.currentCTA + 1) % 3
+    }));
+  },
 
-  updateToggleOption: (id, active) => {
-    set((state) => {
-      const updatedOptions = [...state.toggleOptions];
-      const index = updatedOptions.findIndex(option => option.id === id);
-      
-      if (active) {
-        const activeCount = updatedOptions.filter(o => o.active).length;
-        
-        if (activeCount === 2) {
-          const firstActiveIndex = updatedOptions.findIndex(o => o.active);
-          if (firstActiveIndex !== -1) {
-            updatedOptions[firstActiveIndex].active = false;
-          }
-        }
-      }
-      
-      if (index !== -1) {
-        updatedOptions[index].active = active;
-      }
-      
-      return { toggleOptions: updatedOptions };
-    });
+  resetQubeOptions: () => {
+    set(state => ({
+      qubeOptions: state.qubeOptions.map(option => ({
+        ...option,
+        selected: false
+      }))
+    }));
   },
 
   resetToggleOptions: () => {
@@ -114,45 +147,10 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
   },
 
-  findEasterEggFragment: (id) => {
-    set((state) => {
-      const updatedFragments = [...state.easterEggFragments];
-      const index = updatedFragments.findIndex(fragment => fragment.id === id);
-      
-      if (index !== -1) {
-        updatedFragments[index].found = true;
-      }
-      
-      return { easterEggFragments: updatedFragments };
-    });
-  },
-
-  selectQubeOption: (id) => {
-    set((state) => {
-      const updatedOptions = state.qubeOptions.map(option => 
-        option.id === id ? { ...option, selected: !option.selected } : option
-      );
-      return { qubeOptions: updatedOptions };
-    });
-  },
-
-  nextCTA: () => {
-    set((state) => ({
-      currentCTA: (state.currentCTA + 1) % 7
-    }));
-  },
-
-  resetQubeOptions: () => {
-    set((state) => ({
-      qubeOptions: state.qubeOptions.map(option => ({
-        ...option,
-        selected: false
-      })),
-      assembling: false
-    }));
-  },
-
   allFragmentsFound: () => {
-    return get().easterEggFragments.every(fragment => fragment.found);
-  }
+    const { easterEggFragments } = get();
+    return easterEggFragments.every(f => f.found);
+  },
+
+  setAssembling: (value) => set({ assembling: value }),
 }));
