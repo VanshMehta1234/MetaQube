@@ -252,13 +252,13 @@ const Hero: React.FC = () => {
       
       <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center">
         <motion.div
-          className="text-center mb-6 sm:mb-8 md:mb-10 mt-4 sm:mt-6 md:mt-10"
+          className="text-center mb-8 sm:mb-10 md:mb-12 mt-6 sm:mt-8 md:mt-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <motion.h1 
-            className="font-extrabold mb-4 sm:mb-6 tracking-tight"
+            className="font-extrabold mb-6 sm:mb-8 tracking-tight"
           >
             <span className={`inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl ${
               metaMirrorMode 
@@ -267,7 +267,7 @@ const Hero: React.FC = () => {
             }`}>METAQUBE</span>
           </motion.h1>
           <motion.p 
-            className={`text-base sm:text-lg md:text-xl max-w-md sm:max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 ${
+            className={`text-base sm:text-lg md:text-xl max-w-md sm:max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 py-3 ${
               metaMirrorMode ? 'text-quantumGrey-200' : 'text-gray-800'
             }`}
           >
@@ -283,7 +283,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-8 sm:mb-12 md:mb-16 w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] mx-auto"
+          className="mb-10 sm:mb-14 md:mb-18 w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] mx-auto"
         >
           <HeroCube />
         </motion.div>

@@ -115,9 +115,9 @@ const BuildYourQube: React.FC = () => {
                 option.selected 
                   ? metaMirrorMode
                     ? 'border-metaEmerald-500 bg-metaEmerald-500/10 shadow-lg shadow-metaEmerald-500/20' 
-                    : 'border-metaEmerald-600 bg-gradient-to-br from-metaEmerald-50 to-white shadow-lg shadow-metaEmerald-600/10'
+                    : 'border-metaEmerald-700 bg-gradient-to-br from-metaEmerald-50 to-white shadow-lg shadow-metaEmerald-700/10'
                   : metaMirrorMode
-                    ? 'border-deepCosmos-600 bg-deepCosmos-800/80 hover:border-metaEmerald-800'
+                    ? 'border-deepCosmos-700 bg-deepCosmos-800/80 hover:border-metaEmerald-800'
                     : 'border-gray-200 bg-white hover:border-metaEmerald-600 hover:shadow-md'
               }`}
               onClick={() => selectQubeOption(option.id)}
@@ -135,7 +135,7 @@ const BuildYourQube: React.FC = () => {
                 option.selected 
                   ? metaMirrorMode 
                     ? 'bg-metaEmerald-500/30' 
-                    : 'bg-metaEmerald-600/20'
+                    : 'bg-metaEmerald-700/20'
                   : 'bg-metaEmerald-500/0'
               }`}
               />
@@ -145,7 +145,7 @@ const BuildYourQube: React.FC = () => {
                 option.selected 
                   ? metaMirrorMode
                     ? 'bg-metaEmerald-500'
-                    : 'bg-metaEmerald-600'
+                    : 'bg-metaEmerald-700'
                   : metaMirrorMode
                     ? 'bg-deepCosmos-700'
                     : 'bg-gray-100'
@@ -156,7 +156,7 @@ const BuildYourQube: React.FC = () => {
                       ? metaMirrorMode ? 'text-deepCosmos-900' : 'text-white' 
                       : metaMirrorMode ? 'text-metaEmerald-500' : 'text-gray-900'
                   }>
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    <path d="M11.767 19.089c4.924.868 6.14-6.025 1.216-6.894m-1.216 6.894L5.86 18.047m5.908 1.042-.347 1.97m1.563-8.864c4.924.869 6.14-6.025 1.216-6.893m-1.216 6.893-3.94-.694m5.157-6.2L11.18 2.5m-1.698 16.919c-4.924-.868-6.14 6.025-1.216 6.894m1.216-6.894 6.878 1.213m-8.094 5.68.346-1.97m1.563-8.863c-4.924-.868-6.14 6.025-1.216 6.893m1.216-6.893 3.94.694m-5.156 6.2 3.025 2.694" />
                   </svg>
                 )}
                 {option.id === 'brand' && (
@@ -165,11 +165,15 @@ const BuildYourQube: React.FC = () => {
                       ? metaMirrorMode ? 'text-deepCosmos-900' : 'text-white' 
                       : metaMirrorMode ? 'text-metaEmerald-500' : 'text-gray-900'
                   }>
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <circle cx="12" cy="12" r="4"></circle>
-                    <line x1="21.17" y1="8" x2="12" y2="8"></line>
-                    <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
-                    <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
+                    <path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4"></path>
+                    <path d="M5 19.5C5.5 18 6 15 6 12c0-.7.12-1.37.34-2"></path>
+                    <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"></path>
+                    <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"></path>
+                    <path d="M8.65 22c.21-.66.45-1.32.57-2"></path>
+                    <path d="M14 13.12c0 2.38 0 6.38-1 8.88"></path>
+                    <path d="M2 16h.01"></path>
+                    <path d="M21.8 16c.2-2 .131-5.354 0-6"></path>
+                    <path d="M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2"></path>
                   </svg>
                 )}
                 {option.id === 'dev' && (
@@ -178,8 +182,10 @@ const BuildYourQube: React.FC = () => {
                       ? metaMirrorMode ? 'text-deepCosmos-900' : 'text-white' 
                       : metaMirrorMode ? 'text-metaEmerald-500' : 'text-gray-900'
                   }>
-                    <polyline points="16 18 22 12 16 6"></polyline>
-                    <polyline points="8 6 2 12 8 18"></polyline>
+                    <path d="M13 18L21.5 9.5a2.83 2.83 0 1 0-4-4L8 15"></path>
+                    <path d="M16 18l2-2"></path>
+                    <path d="M8 6l-3.76 1.27a2 2 0 0 0-1.24 2.26l2.76 15.43a1 1 0 0 0 .2.39 1 1 0 0 0 1.47.1c.02-.02.21-.2.4-.4l1.53-1.53 1.2-1.2"></path>
+                    <path d="M5.14 18.5L8 15l-1.5-3-1.5-3-2.76 5.77"></path>
                   </svg>
                 )}
                 {option.id === 'metaverse' && (
@@ -188,8 +194,7 @@ const BuildYourQube: React.FC = () => {
                       ? metaMirrorMode ? 'text-deepCosmos-900' : 'text-white' 
                       : metaMirrorMode ? 'text-metaEmerald-500' : 'text-gray-900'
                   }>
-                    <path d="M3 7v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7"></path>
-                    <path d="M9.17 11V5.33a3.001 3.001 0 0 1 5.66 0V11"></path>
+                    <path d="M12 2a8 8 0 0 0-8 8c0 5.2 7 12 8 12s8-6.8 8-12a8 8 0 0 0-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"></path>
                   </svg>
                 )}
                 {option.id === 'ai' && (
@@ -198,14 +203,23 @@ const BuildYourQube: React.FC = () => {
                       ? metaMirrorMode ? 'text-deepCosmos-900' : 'text-white' 
                       : metaMirrorMode ? 'text-metaEmerald-500' : 'text-gray-900'
                   }>
-                    <path d="M12 2v8"></path>
-                    <path d="M20 12h-8"></path>
-                    <path d="M12 22v-8"></path>
-                    <path d="M4 12h8"></path>
-                    <path d="m16.666 7.333 1.334-1.333"></path>
-                    <path d="m19.333 16.667-1.333-1.334"></path>
-                    <path d="m7.333 7.333-1.333-1.333"></path>
-                    <path d="m4.667 16.667 1.333-1.334"></path>
+                    <rect x="3" y="11" width="8" height="10" rx="2" ry="2"></rect>
+                    <rect x="13" y="11" width="8" height="10" rx="2" ry="2"></rect>
+                    <path d="M9 11V9a5 5 0 0 1 5.17-5C16.95 4 19 6.34 19 9v2"></path>
+                    <path d="M12 17v4"></path>
+                  </svg>
+                )}
+                {option.id === 'digital' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={
+                    option.selected 
+                      ? metaMirrorMode ? 'text-deepCosmos-900' : 'text-white' 
+                      : metaMirrorMode ? 'text-metaEmerald-500' : 'text-gray-900'
+                  }>
+                    <path d="m6 9 6 6 6-6"></path>
+                    <path d="M4 4h16"></path>
+                    <path d="M4 16h4"></path>
+                    <path d="M4 20h12"></path>
+                    <path d="M20 16h-4"></path>
                   </svg>
                 )}
               </div>
@@ -214,15 +228,15 @@ const BuildYourQube: React.FC = () => {
               <div className="relative z-10">
                 <h3 className={`text-xl font-bold mb-3 text-left transition-colors duration-300 ${
                   option.selected
-                    ? metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-600'
-                    : metaMirrorMode ? 'text-prismWhite' : 'text-gray-900'
+                    ? metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-700'
+                    : metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
                 }`}>
                   {option.label}
                 </h3>
                 <p className={`text-left text-sm leading-relaxed min-h-[60px] ${
                   metaMirrorMode 
                     ? 'text-quantumGrey-300' 
-                    : option.selected ? 'text-gray-800' : 'text-gray-600'
+                    : option.selected ? 'text-gray-800' : 'text-deepCosmos-800'
                 }`}>
                   {option.description}
                 </p>
@@ -236,10 +250,10 @@ const BuildYourQube: React.FC = () => {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                   >
                     <div className={`h-px w-full mr-3 ${
-                      metaMirrorMode ? 'bg-metaEmerald-500/50' : 'bg-metaEmerald-600/70'
+                      metaMirrorMode ? 'bg-metaEmerald-500/50' : 'bg-metaEmerald-700/70'
                     }`}></div>
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      metaMirrorMode ? 'bg-metaEmerald-500' : 'bg-metaEmerald-600'
+                      metaMirrorMode ? 'bg-metaEmerald-500' : 'bg-metaEmerald-700'
                     }`}>
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={
                         metaMirrorMode ? 'text-deepCosmos-900' : 'text-white'
@@ -255,7 +269,7 @@ const BuildYourQube: React.FC = () => {
               {option.selected && (
                 <motion.div
                   className={`absolute inset-0 border-2 rounded-xl ${
-                    metaMirrorMode ? 'border-metaEmerald-500' : 'border-metaEmerald-600'
+                    metaMirrorMode ? 'border-metaEmerald-500' : 'border-metaEmerald-700'
                   }`}
                   layoutId="selection"
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
@@ -275,7 +289,7 @@ const BuildYourQube: React.FC = () => {
               metaMirrorMode ? 'text-quantumGrey-300' : 'text-gray-700'
             }`}>
               <span className={`font-bold ${
-                metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-600'
+                metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-700'
               }`}>{selectedCount}</span> options selected
             </p>
           </motion.div>
@@ -323,7 +337,7 @@ const BuildYourQube: React.FC = () => {
               >
                 <motion.div 
                   className={`absolute inset-0 border-2 ${
-                    metaMirrorMode ? 'border-metaEmerald-500' : 'border-metaEmerald-600'
+                    metaMirrorMode ? 'border-metaEmerald-500' : 'border-metaEmerald-700'
                   }`}
                   initial={{ scale: 0, rotate: 0 }}
                   animate={{ 
@@ -337,7 +351,7 @@ const BuildYourQube: React.FC = () => {
                 {/* Glow effect */}
                 <motion.div
                   className={`absolute inset-0 rounded-full filter blur-xl ${
-                    metaMirrorMode ? 'bg-metaEmerald-500' : 'bg-metaEmerald-600 opacity-70'
+                    metaMirrorMode ? 'bg-metaEmerald-500' : 'bg-metaEmerald-700 opacity-70'
                   }`}
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{
@@ -350,7 +364,7 @@ const BuildYourQube: React.FC = () => {
                 {selectedCount > 0 && (
                   <motion.div 
                     className={`absolute inset-0 flex items-center justify-center font-bold text-2xl ${
-                      metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-600'
+                      metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-700'
                     }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: [0, 1, 0.8] }}

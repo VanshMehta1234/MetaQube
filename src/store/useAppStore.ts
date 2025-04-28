@@ -37,32 +37,38 @@ export const useAppStore = create<AppState>((set, get) => ({
   qubeOptions: [
     { 
       id: 'web3', 
-      label: 'Web3 Product', 
-      description: 'Blockchain solutions for next-gen applications', 
+      label: 'Web3 Development', 
+      description: 'Blockchain solutions including DeFi, DePIN, and dApps', 
       selected: false 
     },
     { 
       id: 'brand', 
-      label: 'Brand Design', 
-      description: 'Identity that transcends traditional spaces', 
+      label: 'Brand Consultation', 
+      description: 'Building communities and crafting effective brand communications', 
       selected: false 
     },
     { 
       id: 'dev', 
       label: 'Dev Sprint', 
-      description: 'Accelerated development with expert teams', 
+      description: 'Accelerated development and rescue for unfinished projects', 
       selected: false 
     },
     { 
       id: 'metaverse', 
-      label: 'Metaverse', 
-      description: 'Immersive digital experiences', 
+      label: 'Metaverse Experience', 
+      description: 'Virtual environments with NFT integration and digital ownership', 
       selected: false 
     },
     { 
       id: 'ai', 
-      label: 'AI Integration', 
-      description: 'Intelligent solutions for complex problems', 
+      label: 'AI Development', 
+      description: 'Intelligent agents, tools and LLM-powered solutions', 
+      selected: false 
+    },
+    { 
+      id: 'digital', 
+      label: 'Digital Transformation', 
+      description: 'Upgrading existing businesses with Web3 and AI technologies', 
       selected: false 
     },
   ],

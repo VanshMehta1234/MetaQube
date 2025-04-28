@@ -1,25 +1,124 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Cuboid as Cube, Cpu, Brush, Rocket, Building, Gem } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Cuboid as Cube, Cpu, Brush, Rocket, Building, Gem, X,
+  Bitcoin, Code, Network, Users, BarChart, Activity,
+  DatabaseIcon, PieChart, Globe, Share2, UserPlus, ShoppingBag,
+  Home, ImageIcon, Map, Key, Wrench, Bot, LineChart, Webhook,
+  BrainCircuit, BarChart3, Sparkles
+} from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
+import ServiceModal, { ServiceDetails } from './ServiceModal';
 
 interface ServiceProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  onClick: () => void;
 }
 
-const ServiceCard: React.FC<ServiceProps> = ({ icon, title, description }) => {
+interface SubCategory {
+  title: string;
+  icon: React.ReactNode;
+  description: string;
+}
+
+// Service data with subcategories
+const serviceData: ServiceDetails[] = [
+  {
+    id: 'web3',
+    title: 'Web3 Development',
+    icon: <Cube size={24} />,
+    description: 'Build decentralized applications, smart contracts, and blockchain solutions that redefine digital ownership and interaction.',
+    subcategories: [
+      { title: 'DeFi', icon: <BarChart size={20} />, description: 'Develop decentralized finance applications including lending, trading, and yield optimization platforms.' },
+      { title: 'CeFi', icon: <PieChart size={20} />, description: 'Build centralized finance solutions with blockchain integration for traditional financial services.' },
+      { title: 'DePIN', icon: <Network size={20} />, description: 'Create decentralized physical infrastructure networks connecting blockchain to the physical world.' },
+      { title: 'SocialFi', icon: <Users size={20} />, description: 'Develop social platforms with token incentives and decentralized governance.' },
+      { title: 'Ethereum Dapps', icon: <DatabaseIcon size={20} />, description: 'Build applications on Ethereum with smart contracts, tokens, and web3 integration.' },
+      { title: 'Solana Dapps', icon: <Activity size={20} />, description: 'Develop high-performance applications leveraging Solana\'s speed and efficiency.' },
+      { title: 'EVM Dapps', icon: <Code size={20} />, description: 'Create applications compatible with EVM chains like Polygon, Arbitrum, and Optimism.' },
+      { title: 'Blockchain', icon: <Bitcoin size={20} />, description: 'Develop custom blockchain solutions with advanced consensus mechanisms.' }
+    ]
+  },
+  {
+    id: 'brand',
+    title: 'Brand Consultation',
+    icon: <Brush size={24} />,
+    description: 'Create a cohesive digital identity that transcends traditional spaces and resonates with your audience across platforms.',
+    subcategories: [
+      { title: 'Community Building', icon: <Users size={20} />, description: 'Develop and nurture engaged communities around your brand or project.' },
+      { title: 'Brand Communication', icon: <Globe size={20} />, description: 'Craft consistent messaging that reflects your brand values and resonates with your audience.' },
+      { title: 'Web3 Social Media', icon: <Share2 size={20} />, description: 'Leverage decentralized social platforms to build brand presence and engagement.' },
+      { title: 'Penetration and Distribution', icon: <BarChart size={20} />, description: 'Develop strategies to expand your brand reach and market presence.' },
+      { title: 'Onboarding', icon: <UserPlus size={20} />, description: 'Create seamless user experiences to welcome and guide new users to your platform.' },
+      { title: 'Sales', icon: <ShoppingBag size={20} />, description: 'Implement effective sales strategies optimized for web3 and digital products.' }
+    ]
+  },
+  {
+    id: 'sprints',
+    title: 'Dev Sprints',
+    icon: <Rocket size={24} />,
+    description: 'Accelerate your development cycle with our expert team of engineers and designers to launch your product faster.',
+    subcategories: [
+      { title: 'Rapid Prototyping', icon: <Rocket size={20} />, description: 'Quickly build functional prototypes to validate ideas and gather feedback.' },
+      { title: 'MVP Development', icon: <Code size={20} />, description: 'Develop minimum viable products to test market fit and attract early users.' },
+      { title: 'Code Rescue', icon: <Wrench size={20} />, description: 'Take over and complete projects that have been abandoned or need rescue.' },
+      { title: 'Performance Optimization', icon: <Activity size={20} />, description: 'Improve application speed, efficiency, and resource utilization.' }
+    ]
+  },
+  {
+    id: 'metaverse',
+    title: 'Metaverse Experiences',
+    icon: <Building size={24} />,
+    description: 'Design and develop immersive digital experiences that bridge the gap between the physical and virtual worlds. AR/VR, Sandbox, Decentraland, Realestate etc',
+    subcategories: [
+      { title: 'On-chain Real Estate', icon: <Home size={20} />, description: 'Develop virtual property platforms with blockchain-verified ownership.' },
+      { title: 'NFT Integration', icon: <ImageIcon size={20} />, description: 'Incorporate NFTs as access passes, collectibles, or utility tokens in metaverse spaces.' },
+      { title: 'Virtual Tour', icon: <Map size={20} />, description: 'Create immersive guided experiences through virtual environments and digital twins.' },
+      { title: 'Digital Ownership', icon: <Key size={20} />, description: 'Implement systems for verifiable ownership of digital assets and virtual spaces.' },
+      { title: 'Metaverse Building', icon: <Building size={20} />, description: 'Design and construct virtual spaces, buildings, and environments for various platforms.' },
+      { title: 'Metaverse Tools', icon: <Wrench size={20} />, description: 'Develop tools and utilities that enhance metaverse creation and interaction.' }
+    ]
+  },
+  {
+    id: 'ai',
+    title: 'AI Development',
+    icon: <Cpu size={24} />,
+    description: 'Implement cutting-edge AI technologies to enhance user experiences and automate complex processes.',
+    subcategories: [
+      { title: 'AI Agents', icon: <Bot size={20} />, description: 'Build autonomous agents that perform tasks and make decisions based on specified parameters.' },
+      { title: 'AI Tools for Optimization', icon: <LineChart size={20} />, description: 'Develop AI systems that improve efficiency and performance across business processes.' },
+      { title: 'AI Integration', icon: <Webhook size={20} />, description: 'Incorporate AI capabilities into existing applications and workflows.' },
+      { title: 'LLMs', icon: <BrainCircuit size={20} />, description: 'Implement and fine-tune large language models for specific use cases and industries.' }
+    ]
+  },
+  {
+    id: 'digital',
+    title: 'Digital Transformation',
+    icon: <Gem size={24} />,
+    description: 'Transform your business with Blockchain and AI solutions that drive growth and operational efficiency.',
+    subcategories: [
+      { title: 'Business Process Automation', icon: <BarChart3 size={20} />, description: 'Streamline operations with AI and blockchain-powered automation.' },
+      { title: 'Legacy System Integration', icon: <Webhook size={20} />, description: 'Connect traditional systems with modern web3 and AI technologies.' },
+      { title: 'Digital Strategy', icon: <Sparkles size={20} />, description: 'Develop comprehensive plans for technological adoption and implementation.' }
+    ]
+  }
+];
+
+// Service Card Component
+const ServiceCard: React.FC<ServiceProps> = ({ icon, title, description, onClick }) => {
   const { metaMirrorMode } = useAppStore();
   
   return (
     <motion.div 
-      className={`p-6 rounded-lg border transition-all ${
+      className={`p-6 rounded-lg border transition-all cursor-pointer ${
         metaMirrorMode 
           ? 'bg-deepCosmos-800 border-deepCosmos-700 hover:border-metaEmerald-700' 
           : 'bg-prismWhite border-quantumGrey-200 hover:border-metaEmerald-300'
       }`}
       whileHover={{ y: -10, boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
+      onClick={onClick}
     >
       <div className="w-12 h-12 rounded-full bg-metaEmerald-500 bg-opacity-20 flex items-center justify-center mb-4">
         <div className="text-metaEmerald-500">
@@ -45,12 +144,28 @@ const ServiceCard: React.FC<ServiceProps> = ({ icon, title, description }) => {
 const Services: React.FC = () => {
   const { metaMirrorMode, easterEggFragments, findEasterEggFragment } = useAppStore();
   const fragment = easterEggFragments.find(f => f.id === 'fragment1');
+  const [selectedService, setSelectedService] = useState<ServiceDetails | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Easter egg fragment
   const handleFragmentClick = () => {
     if (fragment && !fragment.found) {
       findEasterEggFragment('fragment1');
     }
+  };
+  
+  // Handle service card click
+  const handleServiceClick = (serviceId: string) => {
+    const service = serviceData.find(s => s.id === serviceId);
+    if (service) {
+      setSelectedService(service);
+      setIsModalOpen(true);
+    }
+  };
+  
+  // Close modal
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
   
   return (
@@ -86,43 +201,26 @@ const Services: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {serviceData.map((service) => (
           <ServiceCard 
-            icon={<Cube size={24} />}
-            title="Web3 Development"
-            description="Build decentralized applications, smart contracts, and blockchain solutions that redefine digital ownership and interaction."
-          />
-          
-          <ServiceCard 
-            icon={<Brush size={24} />}
-            title="Brand Consultation"
-            description="Create a cohesive digital identity that transcends traditional spaces and resonates with your audience across platforms."
-          />
-          
-          <ServiceCard 
-            icon={<Rocket size={24} />}
-            title="Dev Sprints"
-            description="Accelerate your development cycle with our expert team of engineers and designers to launch your product faster."
-          />
-          
-          <ServiceCard 
-            icon={<Building size={24} />}
-            title="Metaverse Experiences"
-            description="Design and develop immersive digital experiences that bridge the gap between the physical and virtual worlds. AR/VR , Sandbox, Decentraland, Realestate etc"
-          />
-          
-          <ServiceCard 
-            icon={<Cpu size={24} />}
-            title="AI Development"
-            description="Implement cutting-edge AI technologies to enhance user experiences and automate complex processes."
-          />
-          
-          <ServiceCard 
-            icon={<Gem size={24} />}
-            title="Digital Transformation"
-            description="Transform your business with Blockchain and AI solutions that drive growth and operational efficiency."
-          />
+              key={service.id}
+              icon={service.icon}
+              title={service.title}
+              description={service.description}
+              onClick={() => handleServiceClick(service.id)}
+            />
+          ))}
         </div>
       </div>
+      
+      {/* Service Modal */}
+      {selectedService && (
+        <ServiceModal 
+          service={selectedService}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
     </section>
   );
 };
