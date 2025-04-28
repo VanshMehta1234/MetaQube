@@ -207,7 +207,7 @@ const FrensMap: React.FC = () => {
             {duplicatedFrens.map((fren, index) => (
               <motion.div
                 key={`${fren.id}-${index}`}
-                className="px-3 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0"
+                className="px-3 pb-12 pt-2 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0"
                 initial={{ opacity: 1 }} // Start fully visible
                 style={{ willChange: 'transform' }}
               >
@@ -216,13 +216,14 @@ const FrensMap: React.FC = () => {
                     metaMirrorMode ? 'bg-deepCosmos-800' : 'bg-white'
                   } p-6 rounded-2xl shadow-xl border ${
                 metaMirrorMode ? 'border-deepCosmos-700' : 'border-quantumGrey-200'
-                  } hover:border-metaEmerald-500 transition-all h-full relative group`}
+                  } hover:border-metaEmerald-500 transition-all h-full relative group overflow-visible`}
                   whileHover={{ 
                     y: -10,
                     boxShadow: metaMirrorMode 
                       ? '0 20px 40px -15px rgba(0, 0, 0, 0.6)'
                       : '0 20px 40px -15px rgba(0, 0, 0, 0.15)'
                   }}
+                  transition={{ duration: 0.3 }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-metaEmerald-500/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity" />
               

@@ -306,9 +306,9 @@ const Hero: React.FC = () => {
         >
           <p className={`text-base sm:text-lg md:text-xl font-medium px-4 text-center ${
             metaMirrorMode ? 'text-metaEmerald-400' : 'text-gray-900'
-          }`}>
-            {ctaMessages[currentCTA].text}
-          </p>
+            }`}>
+              {ctaMessages[currentCTA].text}
+            </p>
           
           <motion.a
             href="#build-qube"
