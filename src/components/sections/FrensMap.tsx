@@ -123,7 +123,7 @@ const FrensMap: React.FC = () => {
   }, [controls, filteredFrens.length]); // Only depend on the length to prevent re-renders
   
   return (
-    <section id="frens" className={`py-24 transition-colors relative overflow-hidden ${
+    <section id="frens" className={`py-24 transition-colors relative overflow-visible ${
       metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-quantumGrey-50'
     }`}>
       {/* Enhanced background elements */}
@@ -193,8 +193,11 @@ const FrensMap: React.FC = () => {
         {/* Auto-scrolling carousel */}
         <div 
           ref={carouselRef}
-          className="overflow-hidden relative"
-          style={{ willChange: 'transform' }} // Performance optimization
+          className="overflow-hidden relative py-2"
+          style={{ 
+            willChange: 'transform',
+            margin: '0 -8px' // Compensate for card padding
+          }}
         >
           <motion.div
             className="flex"
@@ -249,7 +252,8 @@ const FrensMap: React.FC = () => {
                   className={`text-xl font-bold mb-2 ${
                     metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
                   }`}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ type: "tween", duration: 0.2 }}
                 >
                   {fren.name}
                 </motion.h3>
@@ -263,7 +267,8 @@ const FrensMap: React.FC = () => {
                         className={`px-3 py-1 text-xs font-medium rounded-full ${
                           metaMirrorMode ? 'bg-metaEmerald-500/20 text-metaEmerald-500' : 'bg-metaEmerald-800/20 text-metaEmerald-800'
                         }`}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "tween", duration: 0.2 }}
                   >
                     {fren.category}
                   </motion.span>
