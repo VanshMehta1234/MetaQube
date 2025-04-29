@@ -83,6 +83,9 @@ const frens = [
 
 const categories = Array.from(new Set(frens.map(fren => fren.category)));
 
+// Threshold for when to use a carousel instead of grid
+const CAROUSEL_THRESHOLD = 4;
+
 const FrensMap: React.FC = () => {
   const { metaMirrorMode } = useAppStore();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -93,15 +96,22 @@ const FrensMap: React.FC = () => {
     ? frens.filter(fren => fren.category === selectedCategory)
     : frens;
   
-  // Create duplicated arrays for more seamless infinite scroll
-  const duplicatedFrens = [...filteredFrens, ...filteredFrens, ...filteredFrens];
+  // Determine whether to show carousel or grid
+  const shouldShowCarousel = filteredFrens.length > CAROUSEL_THRESHOLD;
+  
+  // Create duplicated arrays for more seamless infinite scroll (only when using carousel)
+  const duplicatedFrens = shouldShowCarousel 
+    ? [...filteredFrens, ...filteredFrens, ...filteredFrens]
+    : [];
   
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(selectedCategory === category ? null : category);
   };
   
-  // Start the automatic animation with reset functionality
+  // Start the automatic animation with reset functionality (only when using carousel)
   useEffect(() => {
+    if (!shouldShowCarousel) return;
+    
     // Reset animation when filteredFrens changes
     controls.set({ x: "0%" });
     
@@ -120,7 +130,79 @@ const FrensMap: React.FC = () => {
     };
     
     startAutoScroll();
-  }, [controls, filteredFrens.length]); // Only depend on the length to prevent re-renders
+  }, [controls, filteredFrens.length, shouldShowCarousel]);
+  
+  // Function to render a company card
+  const renderCompanyCard = (fren: typeof frens[0], index?: number) => (
+    <motion.div
+      key={index !== undefined ? `${fren.id}-${index}` : fren.id}
+      className={`px-3 pb-6 pt-2 ${shouldShowCarousel ? 'w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0' : ''}`}
+      initial={{ opacity: 1 }}
+      style={{ willChange: 'transform' }}
+    >
+      <motion.div
+        className={`${
+          metaMirrorMode ? 'bg-deepCosmos-800' : 'bg-white'
+        } p-6 rounded-2xl shadow-xl border ${
+          metaMirrorMode ? 'border-deepCosmos-700' : 'border-quantumGrey-200'
+        } hover:border-metaEmerald-500 transition-all h-full relative group overflow-visible`}
+        whileHover={{ 
+          y: -10,
+          boxShadow: metaMirrorMode 
+            ? '0 20px 40px -15px rgba(0, 0, 0, 0.6)'
+            : '0 20px 40px -15px rgba(0, 0, 0, 0.15)'
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-metaEmerald-500/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity" />
+        
+        <motion.div 
+          className="w-24 h-24 mx-auto mb-6 relative"
+          whileHover={{ rotate: 360, scale: 1.1 }}
+          transition={{ duration: 0.7 }}
+        >
+          <div className="absolute inset-0 bg-metaEmerald-500 rounded-full opacity-10 animate-pulse" />
+          <div className={`w-full h-full relative z-10 rounded-full ${
+            logoStyles[fren.name as keyof typeof logoStyles] || 'bg-white'
+          } p-3 flex items-center justify-center overflow-hidden border ${metaMirrorMode ? 'border-deepCosmos-600' : 'border-gray-100'} shadow-lg`}>
+            <div className={`flex items-center justify-center inset-0 ${
+              metaMirrorMode ? "text-metaEmerald-500" : "text-metaEmerald-800"
+            }`}>
+              {getLogoIcon(fren.id)}
+            </div>
+          </div>
+        </motion.div>
+        
+        <div className="text-center relative z-10">
+          <motion.h3 
+            className={`text-xl font-bold mb-2 ${
+              metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
+            }`}
+            whileHover={{ scale: 1.03 }}
+            transition={{ type: "tween", duration: 0.2 }}
+          >
+            {fren.name}
+          </motion.h3>
+          <p className={`text-sm mb-4 ${
+            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-700'
+          }`}>
+            {fren.description}
+          </p>
+          <div className="flex items-center justify-center">
+            <motion.span 
+              className={`px-3 py-1 text-xs font-medium rounded-full ${
+                metaMirrorMode ? 'bg-metaEmerald-500/20 text-metaEmerald-500' : 'bg-metaEmerald-800/20 text-metaEmerald-800'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "tween", duration: 0.2 }}
+            >
+              {fren.category}
+            </motion.span>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
   
   return (
     <section id="frens" className={`py-24 transition-colors relative overflow-visible ${
@@ -190,95 +272,38 @@ const FrensMap: React.FC = () => {
           </div>
         </div>
         
-        {/* Auto-scrolling carousel */}
-        <div 
-          ref={carouselRef}
-          className="overflow-hidden relative py-2"
-          style={{ 
-            willChange: 'transform',
-            margin: '0 -8px' // Compensate for card padding
-          }}
-        >
-          <motion.div
-            className="flex"
-            animate={controls}
+        {shouldShowCarousel ? (
+          /* Auto-scrolling carousel for many items */
+          <div 
+            ref={carouselRef}
+            className="overflow-hidden relative py-2 max-w-7xl mx-auto"
             style={{ 
               willChange: 'transform',
-              backfaceVisibility: 'hidden'
+              margin: '0 -8px' // Compensate for card padding
             }}
           >
-            {duplicatedFrens.map((fren, index) => (
-              <motion.div
-                key={`${fren.id}-${index}`}
-                className="px-3 pb-12 pt-2 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0"
-                initial={{ opacity: 1 }} // Start fully visible
-                style={{ willChange: 'transform' }}
-              >
             <motion.div
-              className={`${
-                    metaMirrorMode ? 'bg-deepCosmos-800' : 'bg-white'
-                  } p-6 rounded-2xl shadow-xl border ${
-                metaMirrorMode ? 'border-deepCosmos-700' : 'border-quantumGrey-200'
-                  } hover:border-metaEmerald-500 transition-all h-full relative group overflow-visible`}
-                  whileHover={{ 
-                    y: -10,
-                    boxShadow: metaMirrorMode 
-                      ? '0 20px 40px -15px rgba(0, 0, 0, 0.6)'
-                      : '0 20px 40px -15px rgba(0, 0, 0, 0.15)'
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-metaEmerald-500/10 to-transparent opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity" />
-              
-              <motion.div 
-                    className="w-24 h-24 mx-auto mb-6 relative"
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.7 }}
-              >
-                <div className="absolute inset-0 bg-metaEmerald-500 rounded-full opacity-10 animate-pulse" />
-                    <div className={`w-full h-full relative z-10 rounded-full ${
-                      logoStyles[fren.name as keyof typeof logoStyles] || 'bg-white'
-                    } p-3 flex items-center justify-center overflow-hidden border ${metaMirrorMode ? 'border-deepCosmos-600' : 'border-gray-100'} shadow-lg`}>
-                      <div className={`flex items-center justify-center inset-0 ${
-                        metaMirrorMode ? "text-metaEmerald-500" : "text-metaEmerald-800"
-                      }`}>
-                        {getLogoIcon(fren.id)}
-                      </div>
-                    </div>
-              </motion.div>
-              
-              <div className="text-center relative z-10">
-                <motion.h3 
-                  className={`text-xl font-bold mb-2 ${
-                    metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
-                  }`}
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ type: "tween", duration: 0.2 }}
-                >
-                  {fren.name}
-                </motion.h3>
-                    <p className={`text-sm mb-4 ${
-                      metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-700'
-                }`}>
-                  {fren.description}
-                </p>
-                    <div className="flex items-center justify-center">
-                  <motion.span 
-                        className={`px-3 py-1 text-xs font-medium rounded-full ${
-                          metaMirrorMode ? 'bg-metaEmerald-500/20 text-metaEmerald-500' : 'bg-metaEmerald-800/20 text-metaEmerald-800'
-                        }`}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "tween", duration: 0.2 }}
-                  >
-                    {fren.category}
-                  </motion.span>
-                </div>
-              </div>
-                </motion.div>
+              className="flex"
+              animate={controls}
+              style={{ 
+                willChange: 'transform',
+                backfaceVisibility: 'hidden'
+              }}
+            >
+              {duplicatedFrens.map((fren, index) => renderCompanyCard(fren, index))}
             </motion.div>
-          ))}
-        </motion.div>
-        </div>
+          </div>
+        ) : (
+          /* Grid display for fewer items */
+          <div className={`grid gap-6 max-w-7xl mx-auto ${
+            filteredFrens.length === 1 ? 'grid-cols-1 place-items-center' : 
+            filteredFrens.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl' : 
+            filteredFrens.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl' :
+            'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+          }`}>
+            {filteredFrens.map(fren => renderCompanyCard(fren))}
+          </div>
+        )}
       </div>
     </section>
   );

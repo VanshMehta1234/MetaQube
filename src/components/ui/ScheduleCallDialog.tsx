@@ -105,7 +105,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-500 transition-colors"
+                      className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-600 transition-colors"
                       placeholder="Your name"
                     />
                   </div>
@@ -119,7 +119,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-500 transition-colors"
+                      className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-600 transition-colors"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -132,7 +132,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                       type="text"
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-500 transition-colors"
+                      className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-600 transition-colors"
                       placeholder="Company name (optional)"
                     />
                   </div>
@@ -145,7 +145,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                       value={formData.projectType}
                       onValueChange={(value) => setFormData({ ...formData, projectType: value })}
                     >
-                      <Select.Trigger className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-500 transition-colors flex items-center justify-between">
+                      <Select.Trigger className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-600 transition-colors flex items-center justify-between">
                         <Select.Value placeholder="Select project type" />
                         <Select.Icon>
                           <ChevronDown size={16} />
@@ -163,13 +163,13 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                               <Select.Item 
                                 key={type.value} 
                                 value={type.value} 
-                                className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-500/20 data-[highlighted]:bg-metaEmerald-500/20 rounded-md cursor-pointer flex items-center"
+                                className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-600/20 data-[highlighted]:bg-metaEmerald-600/20 rounded-md cursor-pointer flex items-center"
                               >
                                 <Select.ItemText>{type.label}</Select.ItemText>
                                 <Select.ItemIndicator className="absolute right-2 inline-flex items-center justify-center">
-                                  <Check size={16} className="text-metaEmerald-500" />
+                                  <Check size={16} className="text-metaEmerald-600" />
                                 </Select.ItemIndicator>
-                              </Select.Item>
+                            </Select.Item>
                             ))}
                           </Select.Viewport>
                           
@@ -190,7 +190,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                         value={formData.date}
                         onValueChange={(value) => setFormData({ ...formData, date: value })}
                       >
-                        <Select.Trigger className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-500 transition-colors flex items-center justify-between">
+                        <Select.Trigger className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-600 transition-colors flex items-center justify-between">
                           <Select.Value placeholder="Select date" />
                           <Select.Icon>
                             <ChevronDown size={16} />
@@ -208,11 +208,11 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                                 <Select.Item
                                   key={date}
                                   value={date}
-                                  className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-500/20 data-[highlighted]:bg-metaEmerald-500/20 rounded-md cursor-pointer flex items-center"
+                                  className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-600/20 data-[highlighted]:bg-metaEmerald-600/20 rounded-md cursor-pointer flex items-center"
                                 >
                                   <Select.ItemText>{date}</Select.ItemText>
                                   <Select.ItemIndicator className="absolute right-2 inline-flex items-center justify-center">
-                                    <Check size={16} className="text-metaEmerald-500" />
+                                    <Check size={16} className="text-metaEmerald-600" />
                                   </Select.ItemIndicator>
                                 </Select.Item>
                               ))}
@@ -234,7 +234,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                         value={formData.time}
                         onValueChange={(value) => setFormData({ ...formData, time: value })}
                       >
-                        <Select.Trigger className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-500 transition-colors flex items-center justify-between">
+                        <Select.Trigger className="w-full bg-deepCosmos-700 border border-deepCosmos-600 rounded-lg px-4 py-2 text-prismWhite focus:border-metaEmerald-600 transition-colors flex items-center justify-between">
                           <Select.Value placeholder="Select time" />
                           <Select.Icon>
                             <ChevronDown size={16} />
@@ -252,11 +252,11 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                                 <Select.Item
                                   key={time}
                                   value={time}
-                                  className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-500/20 data-[highlighted]:bg-metaEmerald-500/20 rounded-md cursor-pointer flex items-center"
+                                  className="px-4 py-2 text-prismWhite hover:bg-metaEmerald-600/20 data-[highlighted]:bg-metaEmerald-600/20 rounded-md cursor-pointer flex items-center"
                                 >
                                   <Select.ItemText>{time}</Select.ItemText>
                                   <Select.ItemIndicator className="absolute right-2 inline-flex items-center justify-center">
-                                    <Check size={16} className="text-metaEmerald-500" />
+                                    <Check size={16} className="text-metaEmerald-600" />
                                   </Select.ItemIndicator>
                                 </Select.Item>
                               ))}
@@ -273,7 +273,7 @@ const ScheduleCallDialog: React.FC<ScheduleCallDialogProps> = ({ open, onOpenCha
                   
                   <button
                     type="submit"
-                    className="w-full bg-metaEmerald-500 text-deepCosmos-900 font-bold py-3 px-4 rounded-lg hover:bg-metaEmerald-400 transition-colors mt-6"
+                    className="w-full bg-metaEmerald-600 text-deepCosmos-900 font-bold py-3 px-4 rounded-lg hover:bg-metaEmerald-500 transition-colors mt-6"
                   >
                     {submitted ? 'Call Scheduled!' : 'Schedule Call'}
                   </button>
