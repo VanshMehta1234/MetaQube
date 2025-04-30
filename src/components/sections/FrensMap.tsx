@@ -1,24 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
-import { BookOpen, Coins, Briefcase, ArrowRightLeft, Image, Palette, Wallet, Layers } from 'lucide-react';
 
-// Generate custom SVG logo for each partner
-const getLogoIcon = (id: number) => {
-  switch(id) {
-    case 1: return <BookOpen size={32} className="text-inherit" />;
-    case 2: return <Coins size={32} className="text-inherit" />;
-    case 3: return <Briefcase size={32} className="text-inherit" />;
-    case 4: return <ArrowRightLeft size={32} className="text-inherit" />;
-    case 5: return <Image size={32} className="text-inherit" />;
-    case 6: return <Palette size={32} className="text-inherit" />;
-    case 7: return <Wallet size={32} className="text-inherit" />;
-    case 8: return <Layers size={32} className="text-inherit" />;
-    default: return <div className="text-inherit">Logo</div>;
-  }
-};
-
-// Company-specific logo styles
+// Company-specific logo styles (used for fallback colors)
 const logoStyles = {
   'Buildspace': 'bg-emerald-100',
   'Coinbase': 'bg-blue-50',
@@ -30,55 +14,64 @@ const logoStyles = {
   'Polygon': 'bg-purple-50'
 };
 
+// Company data with logo paths - pointing to local files
 const frens = [
   { 
     id: 1, 
-    name: 'Buildspace', 
-    description: 'Web3 educational platform',
-    category: 'Education'
+    name: 'ETHGlobal', 
+    description: 'Ethereum ecosystem',
+    category: 'Crypto',
+    logoPath: '/logos/ethglobal.svg'
   },
   { 
     id: 2, 
     name: 'Coinbase', 
     description: 'Cryptocurrency exchange',
-    category: 'Exchange'
+    category: 'Exchange',
+    logoPath: '/logos/coinbase.svg'  // Update with your actual logo filename
   },
   { 
     id: 3, 
-    name: 'Paradigm', 
-    description: 'Crypto/Web3 investment firm',
-    category: 'Investment'
+    name: 'Nordek', 
+    description: 'Web3 Payment Solutions',
+    category: 'Wallet',
+    logoPath: '/logos/nordek.svg'  // Update with your actual logo filename
   },
   { 
     id: 4, 
     name: 'Uniswap', 
     description: 'Decentralized exchange protocol',
-    category: 'DeFi'
+    category: 'DeFi',
+    logoPath: '/logos/uniswap.svg'  // Update with your actual logo filename
   },
   { 
     id: 5, 
     name: 'Opensea', 
     description: 'NFT marketplace',
-    category: 'NFT'
+    category: 'NFT',
+    logoPath: '/logos/opensea.svg'  // Update with your actual logo filename
   },
   { 
     id: 6, 
-    name: 'Foundation', 
-    description: 'Creative platform for NFTs',
-    category: 'NFT'
+    name: 'Polygon', 
+    description: 'Ethereum scaling platform',
+    category: 'Infrastructure',
+    logoPath: '/logos/polygon.svg'  // Update with your actual logo filename
   },
   { 
     id: 7, 
     name: 'MetaMask', 
     description: 'Web3 wallet and gateway',
-    category: 'Wallet'
+    category: 'Wallet',
+    logoPath: '/logos/metamask.svg'  // Update with your actual logo filename
   },
   { 
     id: 8, 
-    name: 'Polygon', 
-    description: 'Ethereum scaling platform',
-    category: 'Infrastructure'
-  },
+    name: 'Zeeve', 
+    description: 'Building Blockchain ecosystem',
+    category: 'Infrastructure',
+    logoPath: '/logos/zeeve.svg'  // Update with your actual logo filename
+  }
 ];
 
 const categories = Array.from(new Set(frens.map(fren => fren.category)));
@@ -132,6 +125,23 @@ const FrensMap: React.FC = () => {
     startAutoScroll();
   }, [controls, filteredFrens.length, shouldShowCarousel]);
   
+  // Fallback function for when an image fails to load
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, fren: typeof frens[0]) => {
+    const target = e.target as HTMLImageElement;
+    const initials = fren.name.slice(0, 2).toUpperCase();
+    const bgColor = logoStyles[fren.name as keyof typeof logoStyles] || 'bg-white';
+    
+    // Create a placeholder SVG
+    const placeholderSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${bgColor === 'bg-emerald-100' ? 'rgb(16,185,129)' : 
+      bgColor === 'bg-blue-50' ? 'rgb(59,130,246)' : 
+      bgColor === 'bg-gray-50' ? 'rgb(75,85,99)' : 
+      bgColor === 'bg-pink-50' ? 'rgb(236,72,153)' : 
+      bgColor === 'bg-orange-50' ? 'rgb(249,115,22)' : 
+      bgColor === 'bg-purple-50' ? 'rgb(147,51,234)' : 'rgb(156,163,175)'}" rx="50" ry="50"/><text x="50" y="50" font-family="Arial" font-size="35" fill="white" text-anchor="middle" dominant-baseline="central" font-weight="bold">${initials}</text></svg>`;
+    
+    target.src = placeholderSvg;
+  };
+  
   // Function to render a company card
   const renderCompanyCard = (fren: typeof frens[0], index?: number) => (
     <motion.div
@@ -165,10 +175,13 @@ const FrensMap: React.FC = () => {
           <div className={`w-full h-full relative z-10 rounded-full ${
             logoStyles[fren.name as keyof typeof logoStyles] || 'bg-white'
           } p-3 flex items-center justify-center overflow-hidden border ${metaMirrorMode ? 'border-deepCosmos-600' : 'border-gray-100'} shadow-lg`}>
-            <div className={`flex items-center justify-center inset-0 ${
-              metaMirrorMode ? "text-metaEmerald-500" : "text-metaEmerald-800"
-            }`}>
-              {getLogoIcon(fren.id)}
+            <div className="flex items-center justify-center w-full h-full">
+              <img 
+                src={fren.logoPath}
+                alt={`${fren.name} logo`}
+                className="object-contain w-16 h-16"
+                onError={(e) => handleImageError(e, fren)}
+              />
             </div>
           </div>
         </motion.div>
