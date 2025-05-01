@@ -119,15 +119,7 @@ const FrensMap: React.FC = () => {
     }
   };
 
-  // Handle end of dragging
-  const handleDragEnd = () => {
-    if (!shouldShowCarousel) return;
-    
-    setIsDragging(false);
-    resumeAutoScroll(); // Resume auto-scrolling when drag ends
-  };
-
-  // Handle mouse/touch movement during drag
+  // Handle drag event with smoother circular behavior
   const handleDrag = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging || !shouldShowCarousel || !carouselRef.current) return;
     
@@ -135,51 +127,89 @@ const FrensMap: React.FC = () => {
     const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const deltaX = currentX - dragStartX;
     
-    // Calculate new position (invert delta for natural feel)
-    const newPosition = carouselPosition - deltaX * 0.2; // Reduced sensitivity from 0.5 to 0.2
+    // Get container width for more consistent feel across screen sizes
+    const containerWidth = carouselRef.current.clientWidth;
+    // Adjust sensitivity based on screen width for more consistent feel
+    const dragFactor = 0.3 * (containerWidth / 1000);
     
-    // Update position
+    // Calculate new position with improved sensitivity
+    const newPosition = carouselPosition - deltaX * dragFactor;
+    
+    // Update position with circular behavior
     setDragStartX(currentX);
     setCarouselPosition(newPosition);
     
     // Apply the new position with smooth transition
-    controls.set({ x: `-${newPosition % 66.66}%` });
+    controls.set({ 
+      x: `-${newPosition % 100}%`,
+    });
   };
 
-  // Wheel event handler for horizontal scrolling with mousewheel
+  // Handle end of dragging with momentum effect
+  const handleDragEnd = () => {
+    if (!shouldShowCarousel) return;
+    
+    setIsDragging(false);
+    
+    // Add a slight momentum effect when releasing drag
+    controls.start({
+      x: `-${carouselPosition % 100}%`,
+      transition: { duration: 0.5, ease: "easeOut" }
+    });
+    
+    // Wait for momentum to finish before resuming auto-scroll
+    setTimeout(resumeAutoScroll, 600);
+  };
+
+  // Wheel event handler with improved smoothness
   const handleWheel = (e: React.WheelEvent) => {
     if (!shouldShowCarousel || !carouselRef.current) return;
     
     e.preventDefault(); // Prevent vertical scrolling
     controls.stop(); // Stop auto-scrolling during wheel interaction
     
-    // Calculate new position based on wheel delta
-    const newPosition = carouselPosition + e.deltaY * 0.03; // Reduced sensitivity from 0.1 to 0.03
+    // Get container width for more consistent scrolling
+    const containerWidth = carouselRef.current.clientWidth;
+    
+    // Adjust sensitivity based on screen width and delta magnitude
+    const wheelFactor = 0.02 * (containerWidth / 1000);
+    const deltaMagnitude = Math.min(Math.abs(e.deltaY), 100); // Cap for large delta values
+    const direction = e.deltaY > 0 ? 1 : -1;
+    
+    // Calculate new position with improved sensitivity
+    const newPosition = carouselPosition + direction * deltaMagnitude * wheelFactor;
     setCarouselPosition(newPosition);
     
-    // Apply the new position with smooth transition
+    // Apply the new position with improved easing
     controls.start({ 
-      x: `-${newPosition % 66.66}%`,
-      transition: { duration: 0.5, ease: "easeOut" }
+      x: `-${newPosition % 100}%`,
+      transition: { 
+        duration: 0.8,
+        ease: [0.32, 0.72, 0.35, 1.0] // Custom cubic-bezier for natural feel
+      }
     });
     
-    // Resume auto-scrolling after a delay
+    // Resume auto-scrolling after a longer delay for better UX
     clearTimeout(wheelTimeout.current);
-    wheelTimeout.current = setTimeout(resumeAutoScroll, 2000) as unknown as number; // Increased delay from 1000 to 2000
+    wheelTimeout.current = setTimeout(resumeAutoScroll, 2500) as unknown as number;
   };
   
   // Reference for wheel timeout
   const wheelTimeout = useRef<number>(0);
   
-  // Function to start or resume auto-scrolling
+  // Function to start or resume auto-scrolling with improved smoothness
   const resumeAutoScroll = () => {
     if (!shouldShowCarousel) return;
     
+    // Use the current position as starting point for smoother transition
+    const currentPos = carouselPosition % 100;
+    
     controls.start({
-      x: "-66.66%",
+      // Animation moves from current position through a full cycle
+      x: [`-${currentPos}%`, `-${currentPos + 100}%`],
       transition: {
         x: {
-          duration: 60, // Slowed down from 40 to 60 for gentler auto-scrolling
+          duration: 60,
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop"
@@ -188,18 +218,22 @@ const FrensMap: React.FC = () => {
     });
   };
   
-  // Start the automatic animation with reset functionality (only when using carousel)
+  // Start the automatic animation with improved initial behavior
   useEffect(() => {
     if (!shouldShowCarousel) return;
     
-    // Reset animation when filteredFrens changes
+    // Smoother initial animation with a slight delay
     controls.set({ x: "0%" });
     setCarouselPosition(0);
     
-    resumeAutoScroll();
+    // Small delay before starting animation for better initial rendering
+    const startTimer = setTimeout(() => {
+      resumeAutoScroll();
+    }, 100);
     
-    // Clean up wheel timeout on category change
+    // Clean up timeouts on unmount
     return () => {
+      clearTimeout(startTimer);
       if (wheelTimeout.current) {
         clearTimeout(wheelTimeout.current);
       }

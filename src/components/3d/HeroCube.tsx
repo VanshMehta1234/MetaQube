@@ -134,7 +134,11 @@ const HeroCube: React.FC = () => {
     outerGlow: metaMirrorMode ? 'rgba(64, 190, 255, 0.4)' : 'rgba(64, 190, 255, 0.5)',
     innerCore: metaMirrorMode ? 'rgba(140, 230, 255, 1.0)' : 'rgba(180, 240, 255, 1.0)',
     energyLines: metaMirrorMode ? 'rgba(0, 210, 255, 0.8)' : 'rgba(0, 220, 255, 0.9)',
-    coreBright: metaMirrorMode ? 'rgba(200, 250, 255, 0.95)' : 'rgba(220, 250, 255, 1.0)'
+    coreBright: metaMirrorMode ? 'rgba(200, 250, 255, 0.95)' : 'rgba(220, 250, 255, 1.0)',
+    // New colors for improved inner cube
+    innerEdge: metaMirrorMode ? 'rgba(220, 240, 255, 0.9)' : 'rgba(240, 250, 255, 0.9)',
+    innerVertex: metaMirrorMode ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 1.0)',
+    innerShadow: metaMirrorMode ? 'rgba(90, 180, 255, 0.5)' : 'rgba(120, 210, 255, 0.5)'
   };
   
   // Create reusable styles to reduce duplication
@@ -144,6 +148,80 @@ const HeroCube: React.FC = () => {
     [positionY]: 0,
     [positionX]: 0
   });
+  
+  // Function to create inner cube face styles with proper 3D appearance
+  const createInnerFaceStyle = (face: string) => {
+    // Base style for all faces
+    const baseStyle: React.CSSProperties = {
+      backfaceVisibility: 'hidden',
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      borderRadius: '2px',
+      border: `1px solid ${tesseractColors.innerEdge}`
+    };
+    
+    // Direction-specific lighting to create 3D effect
+    let gradientDirection = '145deg';
+    let gradientStart = 0.7;
+    let gradientEnd = 0.9;
+    
+    // Adjust gradient based on face position to create lighting effect
+    switch(face) {
+      case 'front':
+        gradientDirection = '145deg';
+        gradientStart = 0.9;
+        gradientEnd = 0.7;
+        return {
+          ...baseStyle,
+          transform: 'translateZ(25px)',
+          background: `linear-gradient(${gradientDirection}, rgba(255,255,255,${gradientStart}), ${tesseractColors.coreBright} ${gradientEnd * 100}%)`,
+          boxShadow: `0 0 15px 2px ${tesseractColors.coreBright}`
+        };
+      case 'back':
+        gradientDirection = '325deg';
+        return {
+          ...baseStyle,
+          transform: 'rotateY(180deg) translateZ(25px)',
+          background: `linear-gradient(${gradientDirection}, rgba(255,255,255,${gradientStart}), ${tesseractColors.innerCore} ${gradientEnd * 100}%)`,
+          boxShadow: `0 0 15px 2px ${tesseractColors.innerCore}`
+        };
+      case 'right':
+        gradientDirection = '235deg';
+        return {
+          ...baseStyle,
+          transform: 'rotateY(90deg) translateZ(25px)',
+          background: `linear-gradient(${gradientDirection}, rgba(255,255,255,${gradientStart}), ${tesseractColors.innerCore} ${gradientEnd * 100}%)`,
+          boxShadow: `0 0 15px 2px ${tesseractColors.innerCore}`
+        };
+      case 'left':
+        gradientDirection = '55deg';
+        return {
+          ...baseStyle,
+          transform: 'rotateY(-90deg) translateZ(25px)',
+          background: `linear-gradient(${gradientDirection}, rgba(255,255,255,${gradientStart}), ${tesseractColors.innerCore} ${gradientEnd * 100}%)`,
+          boxShadow: `0 0 15px 2px ${tesseractColors.innerCore}`
+        };
+      case 'top':
+        gradientDirection = '180deg';
+        return {
+          ...baseStyle,
+          transform: 'rotateX(90deg) translateZ(25px)',
+          background: `linear-gradient(${gradientDirection}, rgba(255,255,255,${gradientStart}), ${tesseractColors.innerCore} ${gradientEnd * 100}%)`,
+          boxShadow: `0 0 15px 2px ${tesseractColors.innerCore}`
+        };
+      case 'bottom':
+        gradientDirection = '0deg';
+        return {
+          ...baseStyle,
+          transform: 'rotateX(-90deg) translateZ(25px)',
+          background: `linear-gradient(${gradientDirection}, rgba(255,255,255,${gradientStart}), ${tesseractColors.innerCore} ${gradientEnd * 100}%)`,
+          boxShadow: `0 0 15px 2px ${tesseractColors.innerCore}`
+        };
+      default:
+        return baseStyle;
+    }
+  };
   
   return (
     <div className="relative flex items-center justify-center w-full h-80 sm:h-96">
@@ -215,7 +293,7 @@ const HeroCube: React.FC = () => {
             </div>
           ))}
           
-          {/* Inner light source - using a cube with seamless faces */}
+          {/* Enhanced inner cube with 3D appearance */}
           <div 
             ref={innerCubeRef}
             className="absolute w-2/5 h-2/5"
@@ -225,26 +303,48 @@ const HeroCube: React.FC = () => {
               left: '30%',
             }}
           >
-            {/* Inner cube faces */}
+            {/* Inner cube faces with improved 3D appearance */}
             {['front', 'back', 'right', 'left', 'top', 'bottom'].map((face) => (
               <div
                 key={`inner-${face}`}
-                className="absolute w-full h-full flex items-center justify-center"
-                style={{
-                  backfaceVisibility: 'hidden',
-                  background: `radial-gradient(circle, white 10%, ${tesseractColors.coreBright} 40%, ${tesseractColors.innerCore} 80%)`,
-                  boxShadow: `0 0 20px 5px ${tesseractColors.innerCore}`,
-                  // No border to prevent lines
-                  borderRadius: '0px',
-                  opacity: 0.95,
-                  ...(face === 'front' && { transform: 'translateZ(25px)' }),
-                  ...(face === 'back' && { transform: 'rotateY(180deg) translateZ(25px)' }),
-                  ...(face === 'right' && { transform: 'rotateY(90deg) translateZ(25px)' }),
-                  ...(face === 'left' && { transform: 'rotateY(-90deg) translateZ(25px)' }),
-                  ...(face === 'top' && { transform: 'rotateX(90deg) translateZ(25px)' }),
-                  ...(face === 'bottom' && { transform: 'rotateX(-90deg) translateZ(25px)' }),
-                }}
-              ></div>
+                className="flex items-center justify-center"
+                style={createInnerFaceStyle(face)}
+              >
+                {/* Vertex points for 3D effect - only visible on corners */}
+                <div className="absolute w-full h-full">
+                  {/* Corner vertices to enhance the 3D appearance */}
+                  <div className="absolute top-0 left-0 w-1.5 h-1.5 rounded-full" 
+                    style={{ background: tesseractColors.innerVertex, boxShadow: `0 0 3px 1px ${tesseractColors.innerVertex}` }}></div>
+                  <div className="absolute top-0 right-0 w-1.5 h-1.5 rounded-full"
+                    style={{ background: tesseractColors.innerVertex, boxShadow: `0 0 3px 1px ${tesseractColors.innerVertex}` }}></div>
+                  <div className="absolute bottom-0 left-0 w-1.5 h-1.5 rounded-full"
+                    style={{ background: tesseractColors.innerVertex, boxShadow: `0 0 3px 1px ${tesseractColors.innerVertex}` }}></div>
+                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full"
+                    style={{ background: tesseractColors.innerVertex, boxShadow: `0 0 3px 1px ${tesseractColors.innerVertex}` }}></div>
+                  
+                  {/* Inner pulsing energy core */}
+                  <div className="absolute inset-3">
+                    <motion.div 
+                      className="w-full h-full rounded-sm"
+                      style={{ 
+                        background: `radial-gradient(circle, white 10%, ${tesseractColors.coreBright} 40%)`,
+                        boxShadow: `0 0 8px ${tesseractColors.innerCore}`,
+                        opacity: 0.7
+                      }}
+                      animate={{ 
+                        opacity: [0.7, 0.9, 0.7],
+                        scale: [0.95, 1.05, 0.95]
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity, 
+                        ease: "easeInOut",
+                        delay: Math.random() * 0.5
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>

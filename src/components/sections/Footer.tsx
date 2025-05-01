@@ -54,10 +54,10 @@ const Footer: React.FC = () => {
                 <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
                 <div className="text-quantumGrey-300">
                   <p className="text-base leading-relaxed">
-                    7th Floor, Kamal Apartments, Subhash Nagar
+                  7th floor, Shri kamal Heights, Aerodram Road
                   </p>
                   <p className="text-base leading-relaxed">
-                    Airport Road, Bhavnagar 364001, Gujarat, India
+                   Near Muni dery, Bhavnagar 364001, Gujarat, India
                   </p>
                 </div>
               </div>
