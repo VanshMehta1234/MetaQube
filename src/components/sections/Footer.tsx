@@ -1,6 +1,20 @@
 import React from "react";
-import { Cuboid as Cube, MapPin, Phone, Mail, Twitter, Linkedin, Instagram, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Mail, Twitter, Linkedin, Instagram } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
+
+// Custom Twitter/X icon component
+const TwitterXIcon = ({ size = 22, className = "" }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+    className={className}
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
+);
 
 const Footer: React.FC = () => {
   const { metaMirrorMode, easterEggFragments, findEasterEggFragment, allFragmentsFound } = useAppStore();
@@ -20,126 +34,123 @@ const Footer: React.FC = () => {
   };
   
   return (
-    <footer className={`pt-14 pb-8 transition-colors relative ${
+    <footer className={`py-12 transition-colors relative ${
       metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-deepCosmos-950'
     }`}>
       {/* Background gradient with subtle glowing effect */}
       <div className="absolute inset-0 opacity-30 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-metaEmerald-800/30 to-transparent"></div>
       
-      <div className="max-w-7xl mx-auto px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-11 gap-8 mb-8">
-          {/* Column 1: Company info */}
-          <div className="md:col-span-4">
-            <div className="flex items-center space-x-3 text-xl font-bold text-prismWhite mb-4">
-              <Cube className={metaMirrorMode ? "text-metaEmerald-600" : "text-metaEmerald-700"} size={28} />
-              <span className="tracking-wide">METAQUBE</span>
-            </div>
+      <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {/* Column 1: Contact Information */}
+          <div>
+            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-6 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5">
+              Contact Us
+            </h3>
             
-            <p className="text-quantumGrey-300 mb-4 text-base leading-relaxed">
-              Transcending traditional spaces and accelerating next-generation digital experiences.
-            </p>
-            
-            <p className="text-quantumGrey-300 text-base">
-              Your journey into the metaverse begins here. Let's build a digital tomorrow, today.
-            </p>
-          </div>
-          
-          {/* Column 2: Contact information */}
-          <div className="md:col-span-4">
-            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-4 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5">Contact Us</h3>
-            
-            <div className="space-y-3">
+            <div className="space-y-5">
               <div className="flex items-start space-x-3 group">
-                <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-0.5 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
-                <div className="text-quantumGrey-300 text-base leading-relaxed">
-                  <p>123 Innovation Way, Tech District</p>
-                  <p>San Francisco, CA 94105</p>
+                <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
+                <div className="text-quantumGrey-300">
+                  <p className="text-base leading-relaxed">
+                    7th Floor, Kamal Apartments, Subhash Nagar
+                  </p>
+                  <p className="text-base leading-relaxed">
+                    Airport Road, Bhavnagar 364001, Gujarat, India
+                  </p>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3 group">
                 <Phone className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
-                <a href="tel:+14155552671" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors text-base">
-                  +1 (415) 555-2671
+                <a href="tel:+919054907333" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors text-base">
+                  +91 905 490 7333
                 </a>
               </div>
               
               <div className="flex items-center space-x-3 group">
                 <Mail className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
-                <a href="mailto:hello@metaqube.com" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors text-base">
-                  hello@metaqube.com
+                <a href="mailto:info@metaqube.xyz" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors text-base">
+                  info@metaqube.xyz
                 </a>
               </div>
             </div>
           </div>
           
-          {/* Column 3: Social Media */}
-          <div className="md:col-span-3">
-            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-4 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5">Connect With Us</h3>
+          {/* Column 2: Social Media */}
+          <div className="md:flex md:flex-col">
+            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-6 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5 text-center md:text-center">
+              Connect With Us
+            </h3>
             
-            <div className="space-y-3">
-              <a href="#" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors flex items-center text-base group">
-                <Twitter size={18} className={`mr-3 ${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'}`} />
-                <span className="transition-transform duration-300 inline-block group-hover:translate-x-1">
-                  Twitter
-                </span>
-              </a>
-              
-              <a href="#" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors flex items-center text-base group">
-                <MessageSquare size={18} className={`mr-3 ${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'}`} />
-                <span className="transition-transform duration-300 inline-block group-hover:translate-x-1">
-                  Discord
-                </span>
-              </a>
-              
-              <a href="#" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors flex items-center text-base group">
-                <Linkedin size={18} className={`mr-3 ${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'}`} />
-                <span className="transition-transform duration-300 inline-block group-hover:translate-x-1">
-                  LinkedIn
-                </span>
-              </a>
-              
-              <a href="#" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors flex items-center text-base group">
-                <Instagram size={18} className={`mr-3 ${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'}`} />
-                <span className="transition-transform duration-300 inline-block group-hover:translate-x-1">
+            {/* Social Media Icons - Horizontal Display */}
+            <div className="grid grid-cols-3 gap-6 justify-items-center">
+              <a 
+                href="https://instagram.com/metaqubexyz" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center text-center transition-all duration-300"
+                aria-label="Instagram"
+              >
+                <div className="bg-deepCosmos-800/50 hover:bg-metaEmerald-900/20 p-3 rounded-full mb-2 transition-all duration-300 shadow-sm">
+                  <Instagram 
+                    size={22} 
+                    className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} group-hover:text-metaEmerald-500 transition-all duration-300`} 
+                  />
+                </div>
+                <span className="text-quantumGrey-300 text-sm group-hover:text-metaEmerald-500 transition-colors">
                   Instagram
                 </span>
               </a>
               
               <a 
-                href="#" 
-                className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors relative flex items-center text-base group"
+                href="https://x.com/metaqubexyz" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center text-center transition-all duration-300"
+                aria-label="Twitter/X"
                 onClick={fragment && !fragment.found ? handleFragmentClick : undefined}
               >
-                <Mail size={18} className={`mr-3 ${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'}`} />
-                {fragment && !fragment.found && (
-                  <span className={`absolute w-2 h-2 ${metaMirrorMode ? 'bg-metaEmerald-600' : 'bg-metaEmerald-700'} rounded-full -top-1 right-1 shadow-glow-xs animate-pulse-glow`}></span>
-                )}
-                <span className="transition-transform duration-300 inline-block group-hover:translate-x-1">
-                  Newsletter
+                <div className="bg-deepCosmos-800/50 hover:bg-metaEmerald-900/20 p-3 rounded-full mb-2 relative transition-all duration-300 shadow-sm">
+                  <TwitterXIcon
+                    size={22} 
+                    className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} group-hover:text-metaEmerald-500 transition-all duration-300`} 
+                  />
+                  {fragment && !fragment.found && (
+                    <span className={`absolute w-2 h-2 ${metaMirrorMode ? 'bg-metaEmerald-600' : 'bg-metaEmerald-700'} rounded-full -top-1 -right-1 shadow-glow-xs animate-pulse-glow`}></span>
+                  )}
+                </div>
+                <span className="text-quantumGrey-300 text-sm group-hover:text-metaEmerald-500 transition-colors">
+                  Twitter/X
+                </span>
+              </a>
+              
+              <a 
+                href="https://linkedin.com/company/metaqubexyz" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center text-center transition-all duration-300"
+                aria-label="LinkedIn"
+              >
+                <div className="bg-deepCosmos-800/50 hover:bg-metaEmerald-900/20 p-3 rounded-full mb-2 transition-all duration-300 shadow-sm">
+                  <Linkedin 
+                    size={22} 
+                    className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} group-hover:text-metaEmerald-500 transition-all duration-300`} 
+                  />
+                </div>
+                <span className="text-quantumGrey-300 text-sm group-hover:text-metaEmerald-500 transition-colors">
+                  LinkedIn
                 </span>
               </a>
             </div>
           </div>
         </div>
         
-        <div className="pt-5 border-t border-deepCosmos-700/30 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-quantumGrey-500 text-base mb-4 md:mb-0 tracking-wide">
+        <div className="pt-6 mt-6 border-t border-deepCosmos-700/30 text-center">
+          <p className="text-quantumGrey-500 text-sm tracking-wide">
             © 2025 METAQUBE. All rights reserved.
           </p>
-          
-          <div className="flex flex-wrap justify-center md:justify-end gap-6">
-            <a href="#" className="text-quantumGrey-500 hover:text-metaEmerald-600 text-base tracking-wide transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-quantumGrey-500 hover:text-metaEmerald-600 text-base tracking-wide transition-colors">
-              Terms of Service
-            </a>
-            <a href="#" className="text-quantumGrey-500 hover:text-metaEmerald-600 text-base tracking-wide transition-colors">
-              Cookie Policy
-            </a>
-          </div>
         </div>
       </div>
     </footer>

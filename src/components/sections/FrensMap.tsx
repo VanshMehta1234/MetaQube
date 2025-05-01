@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, PanInfo } from 'framer-motion';
 import { useAppStore } from '../../store/useAppStore';
 
 // Company-specific logo styles (used for fallback colors)
@@ -25,45 +25,45 @@ const frens = [
   },
   { 
     id: 2, 
-    name: 'Coinbase', 
-    description: 'Cryptocurrency exchange',
-    category: 'Exchange',
-    logoPath: '/logos/coinbase.svg'  // Update with your actual logo filename
+    name: 'Tron', 
+    description: 'When innovation meets liquidity',
+    category: 'Blockchain',
+    logoPath: '/logos/tron.svg'  // Update with your actual logo filename
   },
   { 
     id: 3, 
-    name: 'Nordek', 
-    description: 'Web3 Payment Solutions',
-    category: 'Wallet',
-    logoPath: '/logos/nordek.svg'  // Update with your actual logo filename
+    name: 'Chainlink', 
+    description: 'Off-chain to on-chain bridge',
+    category: 'Infrastructure',
+    logoPath: '/logos/chainlink.svg'  // Update with your actual logo filename
   },
   { 
     id: 4, 
-    name: 'Uniswap', 
-    description: 'Decentralized exchange protocol',
+    name: 'Superfluid', 
+    description: 'Money that streams',
     category: 'DeFi',
-    logoPath: '/logos/uniswap.svg'  // Update with your actual logo filename
+    logoPath: '/logos/superfluid.svg'  // Update with your actual logo filename
   },
   { 
     id: 5, 
-    name: 'Opensea', 
-    description: 'NFT marketplace',
-    category: 'NFT',
-    logoPath: '/logos/opensea.svg'  // Update with your actual logo filename
+    name: 'Bera chain', 
+    description: '',
+    category: 'Blockchain',
+    logoPath: '/logos/berachain.svg'  // Update with your actual logo filename
   },
   { 
     id: 6, 
     name: 'Polygon', 
-    description: 'Ethereum scaling platform',
-    category: 'Infrastructure',
+    description: 'Indian native chain',
+    category: 'Blockchain',
     logoPath: '/logos/polygon.svg'  // Update with your actual logo filename
   },
   { 
     id: 7, 
-    name: 'MetaMask', 
-    description: 'Web3 wallet and gateway',
-    category: 'Wallet',
-    logoPath: '/logos/metamask.svg'  // Update with your actual logo filename
+    name: 'Guj government', 
+    description: 'Government of Gujarat ',
+    category: 'Government',
+    logoPath: '/logos/governmentofgujarat.png'  // Update with your actual logo filename
   },
   { 
     id: 8, 
@@ -84,6 +84,9 @@ const FrensMap: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const controls = useAnimation();
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [carouselPosition, setCarouselPosition] = useState(0);
   
   const filteredFrens = selectedCategory 
     ? frens.filter(fren => fren.category === selectedCategory)
@@ -100,6 +103,90 @@ const FrensMap: React.FC = () => {
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(selectedCategory === category ? null : category);
   };
+
+  // Handle start of dragging
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!shouldShowCarousel) return;
+    
+    setIsDragging(true);
+    controls.stop(); // Stop auto-scrolling when user starts dragging
+    
+    // Get initial position
+    if ('touches' in e) {
+      setDragStartX(e.touches[0].clientX);
+    } else {
+      setDragStartX(e.clientX);
+    }
+  };
+
+  // Handle end of dragging
+  const handleDragEnd = () => {
+    if (!shouldShowCarousel) return;
+    
+    setIsDragging(false);
+    resumeAutoScroll(); // Resume auto-scrolling when drag ends
+  };
+
+  // Handle mouse/touch movement during drag
+  const handleDrag = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging || !shouldShowCarousel || !carouselRef.current) return;
+    
+    // Calculate drag distance
+    const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const deltaX = currentX - dragStartX;
+    
+    // Calculate new position (invert delta for natural feel)
+    const newPosition = carouselPosition - deltaX * 0.2; // Reduced sensitivity from 0.5 to 0.2
+    
+    // Update position
+    setDragStartX(currentX);
+    setCarouselPosition(newPosition);
+    
+    // Apply the new position with smooth transition
+    controls.set({ x: `-${newPosition % 66.66}%` });
+  };
+
+  // Wheel event handler for horizontal scrolling with mousewheel
+  const handleWheel = (e: React.WheelEvent) => {
+    if (!shouldShowCarousel || !carouselRef.current) return;
+    
+    e.preventDefault(); // Prevent vertical scrolling
+    controls.stop(); // Stop auto-scrolling during wheel interaction
+    
+    // Calculate new position based on wheel delta
+    const newPosition = carouselPosition + e.deltaY * 0.03; // Reduced sensitivity from 0.1 to 0.03
+    setCarouselPosition(newPosition);
+    
+    // Apply the new position with smooth transition
+    controls.start({ 
+      x: `-${newPosition % 66.66}%`,
+      transition: { duration: 0.5, ease: "easeOut" }
+    });
+    
+    // Resume auto-scrolling after a delay
+    clearTimeout(wheelTimeout.current);
+    wheelTimeout.current = setTimeout(resumeAutoScroll, 2000) as unknown as number; // Increased delay from 1000 to 2000
+  };
+  
+  // Reference for wheel timeout
+  const wheelTimeout = useRef<number>(0);
+  
+  // Function to start or resume auto-scrolling
+  const resumeAutoScroll = () => {
+    if (!shouldShowCarousel) return;
+    
+    controls.start({
+      x: "-66.66%",
+      transition: {
+        x: {
+          duration: 60, // Slowed down from 40 to 60 for gentler auto-scrolling
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop"
+        }
+      }
+    });
+  };
   
   // Start the automatic animation with reset functionality (only when using carousel)
   useEffect(() => {
@@ -107,22 +194,16 @@ const FrensMap: React.FC = () => {
     
     // Reset animation when filteredFrens changes
     controls.set({ x: "0%" });
+    setCarouselPosition(0);
     
-    const startAutoScroll = async () => {
-      controls.start({
-        x: "-66.66%",
-        transition: {
-          x: {
-            duration: 40, // Slower animation for smoother effect
-            ease: "linear",
-            repeat: Infinity,
-            repeatType: "loop"
-          }
-        }
-      });
+    resumeAutoScroll();
+    
+    // Clean up wheel timeout on category change
+    return () => {
+      if (wheelTimeout.current) {
+        clearTimeout(wheelTimeout.current);
+      }
     };
-    
-    startAutoScroll();
   }, [controls, filteredFrens.length, shouldShowCarousel]);
   
   // Fallback function for when an image fails to load
@@ -146,7 +227,7 @@ const FrensMap: React.FC = () => {
   const renderCompanyCard = (fren: typeof frens[0], index?: number) => (
     <motion.div
       key={index !== undefined ? `${fren.id}-${index}` : fren.id}
-      className={`px-3 pb-6 pt-2 ${shouldShowCarousel ? 'w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0' : ''}`}
+      className={`px-2 pb-6 pt-2 ${shouldShowCarousel ? 'w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0' : ''}`}
       initial={{ opacity: 1 }}
       style={{ willChange: 'transform' }}
     >
@@ -285,38 +366,49 @@ const FrensMap: React.FC = () => {
           </div>
         </div>
         
-        {shouldShowCarousel ? (
-          /* Auto-scrolling carousel for many items */
-          <div 
-            ref={carouselRef}
-            className="overflow-hidden relative py-2 max-w-7xl mx-auto"
-            style={{ 
-              willChange: 'transform',
-              margin: '0 -8px' // Compensate for card padding
-            }}
-          >
-            <motion.div
-              className="flex"
-              animate={controls}
+        <div className="px-0 md:px-2">
+          {shouldShowCarousel ? (
+            /* Auto-scrolling carousel for many items */
+            <div 
+              ref={carouselRef}
+              className="overflow-hidden relative py-2 max-w-7xl mx-auto"
               style={{ 
                 willChange: 'transform',
-                backfaceVisibility: 'hidden'
+                margin: '0 auto',
+                cursor: isDragging ? 'grabbing' : 'grab'
               }}
+              onMouseDown={handleDragStart}
+              onMouseMove={handleDrag}
+              onMouseUp={handleDragEnd}
+              onMouseLeave={handleDragEnd}
+              onTouchStart={handleDragStart}
+              onTouchMove={handleDrag}
+              onTouchEnd={handleDragEnd}
+              onWheel={handleWheel}
             >
-              {duplicatedFrens.map((fren, index) => renderCompanyCard(fren, index))}
-            </motion.div>
-          </div>
-        ) : (
-          /* Grid display for fewer items */
-          <div className={`grid gap-6 max-w-7xl mx-auto ${
-            filteredFrens.length === 1 ? 'grid-cols-1 place-items-center' : 
-            filteredFrens.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl' : 
-            filteredFrens.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl' :
-            'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-          }`}>
-            {filteredFrens.map(fren => renderCompanyCard(fren))}
-          </div>
-        )}
+              <motion.div
+                className="flex"
+                animate={controls}
+                style={{ 
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden'
+                }}
+              >
+                {duplicatedFrens.map((fren, index) => renderCompanyCard(fren, index))}
+              </motion.div>
+            </div>
+          ) : (
+            /* Grid display for fewer items */
+            <div className={`grid gap-6 max-w-7xl mx-auto ${
+              filteredFrens.length === 1 ? 'grid-cols-1 place-items-center' : 
+              filteredFrens.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl' : 
+              filteredFrens.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl' :
+              'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+            }`}>
+              {filteredFrens.map(fren => renderCompanyCard(fren))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

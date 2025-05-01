@@ -143,7 +143,7 @@ const ContactCTA: React.FC = () => {
             
           <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-5 py-1 sm:py-2">
             <motion.a
-              href="mailto:hello@metaqube.com"
+              href="mailto:info@metaqube.xyz"
               className="bg-metaEmerald-700 text-deepCosmos-900 px-5 sm:px-7 py-2.5 sm:py-3 rounded-lg text-center text-base font-bold hover:bg-metaEmerald-600 transition-all relative overflow-hidden group w-full sm:w-auto flex items-center justify-center gap-2"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
