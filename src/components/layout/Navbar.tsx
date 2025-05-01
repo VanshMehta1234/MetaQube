@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cuboid as Cube } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 import ServicesPopup from '../ui/ServicesPopup';
 import MobileServicesMenu from '../ui/MobileServicesMenu';
@@ -68,7 +67,13 @@ const Navbar: React.FC = () => {
               whileHover={{ scale: 1.03 }}
             >
               <div className="relative">
-                <Cube className="text-metaEmerald-500" size={36} />
+                <img 
+                  src="/logos/METAQUBE ICON PNG.png" 
+                  alt="METAQUBE"
+                  width={36}
+                  height={36} 
+                  className="object-contain" 
+                />
                 <div className={`absolute inset-0 rounded-full blur-lg transition-opacity group-hover:opacity-100 ${
                   metaMirrorMode ? 'bg-metaEmerald-500/30 opacity-50' : 'bg-metaEmerald-500/20 opacity-0'
                 }`}></div>
