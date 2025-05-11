@@ -33,7 +33,7 @@ const ToggleGroup: React.FC = () => {
       <div className="flex flex-col items-center space-y-4 md:space-y-5">
         <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${
           metaMirrorMode ? 'text-prismWhite' : 'text-black'
-        }`}>Project Parameters</h2>
+        }`}>Pick any two</h2>
         
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
           {toggleOptions.map((option) => {

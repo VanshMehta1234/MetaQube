@@ -8,11 +8,10 @@ import ToggleGroup from '../ui/ToggleGroup';
 const ctaMessages = [
   { id: 0, text: "Need a Qube that slaps?" },
   { id: 1, text: "Brand's mid? Let's fix that." },
-  { id: 2, text: "Web3's boring. You aren't." },
-  { id: 3, text: "Meta without the verse." },
-  { id: 4, text: "Craft digital experiences that matter." },
-  { id: 5, text: "Build beyond boundaries." },
-  { id: 6, text: "Accelerate your digital transformation." },
+  { id: 2, text: "Meta without the verse." },
+  { id: 3, text: "Craft digital experiences that matter." },
+  { id: 4, text: "Build beyond boundaries." },
+  { id: 5, text: "Accelerate your digital transformation." },
 ];
 
 // Further reduced grid size for better performance
@@ -266,16 +265,28 @@ const Hero: React.FC = () => {
                 : 'bg-clip-text text-transparent bg-gradient-to-r from-black via-black to-gray-900'
             }`}>METAQUBE</span>
           </motion.h1>
+          
           <motion.p 
-            className={`text-base sm:text-lg md:text-xl max-w-md sm:max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 py-3 ${
+            className={`text-center max-w-md sm:max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 py-3 ${
               metaMirrorMode ? 'text-quantumGrey-200' : 'text-gray-800'
             }`}
           >
-            Crafting digital experiences that <span className={`font-semibold ${
+            <span className={`block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8 ${
               metaMirrorMode ? 'text-metaEmerald-500' : 'text-black'
-            }`}>transcend</span> boundaries and <span className={`font-semibold ${
-              metaMirrorMode ? 'text-metaEmerald-500' : 'text-black'
-            }`}>accelerate</span> innovation.
+            }`}>
+              We build Quality tech
+            </span>
+            <div className="space-y-2">
+              <span className="block text-base sm:text-lg md:text-xl text-center">
+                Team of engineers dedicated to build
+              </span>
+              <span className="block text-base sm:text-lg md:text-xl text-center">
+                Future of Internet using web3 and AI with
+              </span>
+              <span className="block text-base sm:text-lg md:text-xl text-center">
+                Artist-like precision.
+              </span>
+            </div>
           </motion.p>
         </motion.div>
         
@@ -325,7 +336,7 @@ const Hero: React.FC = () => {
             }}
             whileTap={{ scale: 0.95 }}
           >
-            Build Your Qube
+            Inquire
           </motion.a>
         </motion.div>
       </div>

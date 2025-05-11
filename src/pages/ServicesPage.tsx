@@ -21,7 +21,7 @@ const ServicesPage: React.FC = () => {
     {
       icon: <Brush size={32} />,
       title: "Brand Consultation",
-      description: "Create a cohesive digital identity that transcends traditional spaces and resonates with your audience across platforms.",
+      description: "Are you trying to build a web3 or AI brand and don’t know where to start? we can help you from beginning to end. our team is expert in building web3 and AI brands having experience of building 50+ brands.",
       features: [
         "Brand Strategy",
         "Visual Identity",
@@ -32,7 +32,7 @@ const ServicesPage: React.FC = () => {
     {
       icon: <Rocket size={32} />,
       title: "Dev Sprints",
-      description: "Accelerate your development cycle with our expert team of engineers and designers to launch your product faster.",
+      description: "Somebody left your work undone? or do you want to accelerate your development cycle? Our expert team of engineers can take the worries off of your hands.",
       features: [
         "Rapid Prototyping",
         "MVP Development",

@@ -53,11 +53,22 @@ const Footer: React.FC = () => {
               <div className="flex items-start space-x-3 group">
                 <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
                 <div className="text-quantumGrey-300">
+                  <p className="text-base font-medium mb-1">India Address</p>
                   <p className="text-base leading-relaxed">
                   7th floor, Shri kamal Heights, Aerodram Road
                   </p>
                   <p className="text-base leading-relaxed">
                    Near Muni dery, Bhavnagar 364001, Gujarat, India
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3 group">
+                <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
+                <div className="text-quantumGrey-300">
+                  <p className="text-base font-medium mb-1">USA Address</p>
+                  <p className="text-base leading-relaxed">
+                   550 S hill st, STE 605, Los Angeles, CA, 90013
                   </p>
                 </div>
               </div>

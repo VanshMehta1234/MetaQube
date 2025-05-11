@@ -45,7 +45,7 @@ const serviceData: ServiceDetails[] = [
     id: 'brand',
     title: 'Brand Consultation',
     icon: <Brush size={24} />,
-    description: 'Create a cohesive digital identity that transcends traditional spaces and resonates with your audience across platforms.',
+    description: 'Are you trying to build a web3 or AI brand and don’t know where to start? we can help you from beginning to end. our team is expert in building web3 and AI brands having experience of building 50+ brands.',
     subcategories: [
       { title: 'Community Building', icon: <Users size={20} />, description: 'Develop and nurture engaged communities around your brand or project.' },
       { title: 'Brand Communication', icon: <Globe size={20} />, description: 'Craft consistent messaging that reflects your brand values and resonates with your audience.' },
@@ -59,7 +59,7 @@ const serviceData: ServiceDetails[] = [
     id: 'sprints',
     title: 'Dev Sprints',
     icon: <Rocket size={24} />,
-    description: 'Accelerate your development cycle with our expert team of engineers and designers to launch your product faster.',
+    description: 'Somebody left your work undone? or do you want to accelerate your development cycle? Our expert team of engineers can take the worries off of your hands.',
     subcategories: [
       { title: 'Rapid Prototyping', icon: <Rocket size={20} />, description: 'Quickly build functional prototypes to validate ideas and gather feedback.' },
       { title: 'MVP Development', icon: <Code size={20} />, description: 'Develop minimum viable products to test market fit and attract early users.' },
@@ -71,7 +71,7 @@ const serviceData: ServiceDetails[] = [
     id: 'metaverse',
     title: 'Metaverse Experiences',
     icon: <Building size={24} />,
-    description: 'Design and develop immersive digital experiences that bridge the gap between the physical and virtual worlds. AR/VR, Sandbox, Decentraland, Realestate etc',
+    description: 'Design and develop immersive digital experiences that bridge the gap between the physical and virtual worlds. AR/VR, Sandbox, Decentraland, Realestate etc.',
     subcategories: [
       { title: 'On-chain Real Estate', icon: <Home size={20} />, description: 'Develop virtual property platforms with blockchain-verified ownership.' },
       { title: 'NFT Integration', icon: <ImageIcon size={20} />, description: 'Incorporate NFTs as access passes, collectibles, or utility tokens in metaverse spaces.' },
@@ -185,7 +185,7 @@ const Services: React.FC = () => {
           <p className={`text-lg max-w-2xl mx-auto ${
             metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
           }`}>
-            We help brands and creators accelerate next-generation digital experiences.
+            We help businesses to get equipped with latest tech efficiency.
           </p>
           
           {/* Hidden easter egg fragment */}

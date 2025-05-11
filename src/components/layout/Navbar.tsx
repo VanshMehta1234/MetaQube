@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
   }, [scrolled]);
   
   const navLinks = [
-    { name: 'Build', href: '#build-qube' },
+    { name: 'Inquire', href: '#build-qube' },
     { name: 'Work', href: '#frens' },
     { name: 'Contact', href: '#contact' }
   ];
