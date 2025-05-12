@@ -271,7 +271,7 @@ const Hero: React.FC = () => {
               metaMirrorMode ? 'text-quantumGrey-200' : 'text-gray-800'
             }`}
           >
-            <span className={`block text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8 ${
+            <span className={`block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 ${
               metaMirrorMode ? 'text-metaEmerald-500' : 'text-black'
             }`}>
               We build Quality tech
@@ -315,12 +315,6 @@ const Hero: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <p className={`text-base sm:text-lg md:text-xl font-medium px-4 text-center ${
-            metaMirrorMode ? 'text-metaEmerald-400' : 'text-gray-900'
-            }`}>
-              {ctaMessages[currentCTA].text}
-            </p>
-          
           <motion.a
             href="#build-qube"
             className={`px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-lg text-base sm:text-lg md:text-xl font-bold shadow-xl transition-all ${

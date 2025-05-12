@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Phone, Mail, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { MapPin, Phone, Mail, Linkedin, Instagram } from 'lucide-react';
 import { useAppStore } from '../../store/useAppStore';
 
 // Custom Twitter/X icon component
@@ -42,8 +42,8 @@ const Footer: React.FC = () => {
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-metaEmerald-800/30 to-transparent"></div>
       
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Column 1: Contact Information */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {/* Column 1: India Address and Phone */}
           <div>
             <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-6 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5">
               Contact Us
@@ -53,22 +53,11 @@ const Footer: React.FC = () => {
               <div className="flex items-start space-x-3 group">
                 <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
                 <div className="text-quantumGrey-300">
-                  <p className="text-base font-medium mb-1">India Address</p>
                   <p className="text-base leading-relaxed">
                   7th floor, Shri kamal Heights, Aerodram Road
                   </p>
                   <p className="text-base leading-relaxed">
                    Near Muni dery, Bhavnagar 364001, Gujarat, India
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3 group">
-                <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
-                <div className="text-quantumGrey-300">
-                  <p className="text-base font-medium mb-1">USA Address</p>
-                  <p className="text-base leading-relaxed">
-                   550 S hill st, STE 605, Los Angeles, CA, 90013
                   </p>
                 </div>
               </div>
@@ -79,9 +68,27 @@ const Footer: React.FC = () => {
                   +91 905 490 7333
                 </a>
               </div>
+            </div>
+          </div>
+          
+          {/* Column 2: USA Address and Email */}
+          <div>
+            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-6 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5">
+              &nbsp;
+            </h3>
+            
+            <div className="space-y-5">
+              <div className="flex items-start space-x-3 group">
+                <MapPin className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
+                <div className="text-quantumGrey-300">
+                  <p className="text-base leading-relaxed">
+                   550 S hill st, STE 605, Los Angeles, CA, 90013
+                  </p>
+                </div>
+              </div>
               
-              <div className="flex items-center space-x-3 group">
-                <Mail className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
+              <div className="flex items-start space-x-3 group">
+                <Mail className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 mt-1 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
                 <a href="mailto:info@metaqube.xyz" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors text-base">
                   info@metaqube.xyz
                 </a>
@@ -89,14 +96,14 @@ const Footer: React.FC = () => {
             </div>
           </div>
           
-          {/* Column 2: Social Media */}
-          <div className="md:flex md:flex-col">
-            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-6 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5 text-center md:text-center">
+          {/* Column 3: Social Media */}
+          <div className="flex flex-col items-center">
+            <h3 className="text-base uppercase font-bold tracking-wider text-prismWhite mb-6 after:content-[''] after:block after:w-10 after:h-0.5 after:bg-metaEmerald-700/40 after:mt-1.5 text-center">
               Connect With Us
             </h3>
             
             {/* Social Media Icons - Horizontal Display */}
-            <div className="grid grid-cols-3 gap-6 justify-items-center">
+            <div className="grid grid-cols-3 gap-4 justify-items-center">
               <a 
                 href="https://instagram.com/metaqubexyz" 
                 target="_blank"
