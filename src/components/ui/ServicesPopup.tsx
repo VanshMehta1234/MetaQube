@@ -88,7 +88,25 @@ const serviceCategories: ServiceCategory[] = [
 const ServicesPopup: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<'left' | 'right'>('left');
   const popupRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  
+  // Calculate dropdown position based on viewport
+  const calculatePosition = () => {
+    if (!triggerRef.current) return;
+    
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const dropdownWidth = 800; // Fixed dropdown width
+    const viewportWidth = window.innerWidth;
+    const spacing = 16; // Minimum spacing from edge
+    
+    // Check if dropdown would overflow on the right
+    const wouldOverflowRight = triggerRect.left + dropdownWidth + spacing > viewportWidth;
+    
+    // Position dropdown to the right if it would overflow on the left side
+    setDropdownPosition(wouldOverflowRight ? 'right' : 'left');
+  };
   
   // Close popup when clicking outside
   useEffect(() => {
@@ -104,16 +122,43 @@ const ServicesPopup: React.FC = () => {
     };
   }, []);
   
+  // Recalculate position on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (isOpen) {
+        calculatePosition();
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isOpen]);
+  
   const handleCategoryHover = (index: number) => {
     setActiveCategory(index);
+  };
+  
+  const handleOpen = () => {
+    calculatePosition();
+    setIsOpen(true);
+  };
+  
+  // Get responsive dropdown width based on viewport
+  const getDropdownClasses = () => {
+    const baseClasses = "absolute mt-2 z-50 bg-deepCosmos-800 border border-deepCosmos-700 rounded-xl shadow-2xl shadow-black/50 flex overflow-hidden";
+    const widthClasses = "w-[800px] max-w-[95vw] lg:w-[800px] md:w-[700px] sm:w-[90vw]";
+    const positionClasses = dropdownPosition === 'right' ? 'right-0' : 'left-0';
+    
+    return `${baseClasses} ${widthClasses} ${positionClasses}`;
   };
   
   return (
     <div className="relative" ref={popupRef}>
       <button
+        ref={triggerRef}
         className="relative font-medium text-lg hover:text-metaEmerald-500 transition-colors overflow-hidden text-prismWhite/90"
         onClick={() => setIsOpen(!isOpen)}
-        onMouseEnter={() => setIsOpen(true)}
+        onMouseEnter={handleOpen}
       >
         Services
         <span className="absolute bottom-0 left-0 w-0 h-[2px] transition-all duration-300 ease-in-out group-hover:w-full bg-metaEmerald-500"></span>
@@ -126,15 +171,15 @@ const ServicesPopup: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="absolute left-0 mt-2 z-50 bg-deepCosmos-800 border border-deepCosmos-700 rounded-xl shadow-2xl shadow-black/50 w-[800px] flex overflow-hidden"
+            className={getDropdownClasses()}
             onMouseLeave={() => setIsOpen(false)}
           >
             {/* Categories list */}
-            <div className="w-1/3 border-r border-deepCosmos-700 bg-deepCosmos-900/30">
+            <div className="w-1/3 min-w-[200px] border-r border-deepCosmos-700 bg-deepCosmos-900/30">
               {serviceCategories.map((category, index) => (
                 <motion.div
                   key={index}
-                  className={`px-4 py-3 flex items-center space-x-3 cursor-pointer ${
+                  className={`px-4 py-3 flex items-center space-x-3 cursor-pointer text-sm lg:text-base ${
                     activeCategory === index 
                       ? 'bg-metaEmerald-500/10 text-metaEmerald-500' 
                       : 'text-prismWhite hover:bg-deepCosmos-700/50'
@@ -143,27 +188,27 @@ const ServicesPopup: React.FC = () => {
                   onClick={() => handleCategoryHover(index)}
                   whileHover={{ x: 5 }}
                 >
-                  <div className={`${activeCategory === index ? 'text-metaEmerald-500' : 'text-metaEmerald-500/60'}`}>
+                  <div className={`flex-shrink-0 ${activeCategory === index ? 'text-metaEmerald-500' : 'text-metaEmerald-500/60'}`}>
                     {category.mainIcon}
                   </div>
-                  <span className="font-medium">{category.title}</span>
+                  <span className="font-medium truncate">{category.title}</span>
                 </motion.div>
               ))}
             </div>
             
             {/* Subcategories */}
-            <div className="w-2/3 p-6 bg-gradient-to-br from-deepCosmos-800 to-deepCosmos-900">
+            <div className="w-2/3 p-4 lg:p-6 bg-gradient-to-br from-deepCosmos-800 to-deepCosmos-900">
               {activeCategory !== null && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <h3 className="text-xl font-bold text-metaEmerald-500 mb-4 flex items-center gap-2">
+                  <h3 className="text-lg lg:text-xl font-bold text-metaEmerald-500 mb-4 flex items-center gap-2">
                     {serviceCategories[activeCategory].mainIcon}
-                    {serviceCategories[activeCategory].title}
+                    <span className="truncate">{serviceCategories[activeCategory].title}</span>
                   </h3>
-                  <div className="grid grid-cols-2 gap-y-3 gap-x-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-3 gap-x-4 lg:gap-x-6">
                     {serviceCategories[activeCategory].subCategories.map((subCategory, idx) => (
                       <motion.a
                         key={idx}
@@ -171,10 +216,12 @@ const ServicesPopup: React.FC = () => {
                         className="flex items-center space-x-2 p-2 rounded-lg hover:bg-deepCosmos-700/50 group"
                         whileHover={{ x: 5 }}
                       >
-                        <div className="w-8 h-8 rounded-full bg-metaEmerald-500/10 flex items-center justify-center text-metaEmerald-500 group-hover:bg-metaEmerald-500/20">
+                        <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-metaEmerald-500/10 flex items-center justify-center text-metaEmerald-500 group-hover:bg-metaEmerald-500/20 flex-shrink-0">
                           {subCategory.icon}
                         </div>
-                        <span className="text-quantumGrey-300 group-hover:text-prismWhite">{subCategory.title}</span>
+                        <span className="text-sm lg:text-base text-quantumGrey-300 group-hover:text-prismWhite break-words">
+                          {subCategory.title}
+                        </span>
                       </motion.a>
                     ))}
                   </div>
