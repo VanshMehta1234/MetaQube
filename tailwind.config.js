@@ -41,6 +41,8 @@ export default {
       },
       fontFamily: {
         manrope: ['Manrope', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',

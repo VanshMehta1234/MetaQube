@@ -88,6 +88,7 @@ const serviceCategories: ServiceCategory[] = [
 const ServicesPopup: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [showSubcategories, setShowSubcategories] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState<'left' | 'right'>('left');
   const popupRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -113,6 +114,7 @@ const ServicesPopup: React.FC = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setShowSubcategories(false);
       }
     };
     
@@ -136,17 +138,22 @@ const ServicesPopup: React.FC = () => {
   
   const handleCategoryHover = (index: number) => {
     setActiveCategory(index);
+    setShowSubcategories(true);
   };
   
   const handleOpen = () => {
     calculatePosition();
     setIsOpen(true);
+    // Reset subcategories display when opening the menu
+    setShowSubcategories(false);
   };
   
   // Get responsive dropdown width based on viewport
   const getDropdownClasses = () => {
     const baseClasses = "absolute mt-2 z-50 bg-deepCosmos-800 border border-deepCosmos-700 rounded-xl shadow-2xl shadow-black/50 flex overflow-hidden";
-    const widthClasses = "w-[800px] max-w-[95vw] lg:w-[800px] md:w-[700px] sm:w-[90vw]";
+    const widthClasses = showSubcategories 
+      ? "w-[800px] max-w-[95vw] lg:w-[800px] md:w-[700px] sm:w-[90vw]" 
+      : "w-[300px]";
     const positionClasses = dropdownPosition === 'right' ? 'right-0' : 'left-0';
     
     return `${baseClasses} ${widthClasses} ${positionClasses}`;
@@ -174,59 +181,106 @@ const ServicesPopup: React.FC = () => {
             className={getDropdownClasses()}
             onMouseLeave={() => setIsOpen(false)}
           >
-            {/* Categories list */}
-            <div className="w-1/3 min-w-[200px] border-r border-deepCosmos-700 bg-deepCosmos-900/30">
-              {serviceCategories.map((category, index) => (
-                <motion.div
-                  key={index}
-                  className={`px-4 py-3 flex items-center space-x-3 cursor-pointer text-sm lg:text-base ${
-                    activeCategory === index 
-                      ? 'bg-metaEmerald-500/10 text-metaEmerald-500' 
-                      : 'text-prismWhite hover:bg-deepCosmos-700/50'
-                  }`}
-                  onMouseEnter={() => handleCategoryHover(index)}
-                  onClick={() => handleCategoryHover(index)}
-                  whileHover={{ x: 5 }}
+            {/* Main layout container with conditional width for subcategories */}
+            <div className={`flex w-full ${!showSubcategories ? 'justify-end' : ''}`}>
+              {/* Subcategories - Conditionally rendered on LEFT side */}
+              {showSubcategories && activeCategory !== null && (
+                <motion.div 
+                  className="w-2/3 p-4 lg:p-6 bg-gradient-to-br from-deepCosmos-800 to-deepCosmos-900 border-r border-deepCosmos-700 overflow-hidden"
+                  initial={{ opacity: 0, width: 0, x: -50 }}
+                  animate={{ opacity: 1, width: "66.666667%", x: 0 }}
+                  exit={{ opacity: 0, width: 0, x: -50 }}
+                  transition={{ 
+                    duration: 0.4, 
+                    ease: [0.16, 1, 0.3, 1], // Spring-like cubic bezier
+                    width: { duration: 0.35 },
+                    opacity: { duration: 0.25 }
+                  }}
                 >
-                  <div className={`flex-shrink-0 ${activeCategory === index ? 'text-metaEmerald-500' : 'text-metaEmerald-500/60'}`}>
-                    {category.mainIcon}
-                  </div>
-                  <span className="font-medium truncate">{category.title}</span>
-                </motion.div>
-              ))}
-            </div>
-            
-            {/* Subcategories */}
-            <div className="w-2/3 p-4 lg:p-6 bg-gradient-to-br from-deepCosmos-800 to-deepCosmos-900">
-              {activeCategory !== null && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <h3 className="text-lg lg:text-xl font-bold text-metaEmerald-500 mb-4 flex items-center gap-2">
-                    {serviceCategories[activeCategory].mainIcon}
-                    <span className="truncate">{serviceCategories[activeCategory].title}</span>
-                  </h3>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-3 gap-x-4 lg:gap-x-6">
-                    {serviceCategories[activeCategory].subCategories.map((subCategory, idx) => (
-                      <motion.a
-                        key={idx}
-                        href={`#${serviceCategories[activeCategory].title.toLowerCase().replace(/\s+/g, '-')}-${subCategory.title.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="flex items-center space-x-2 p-2 rounded-lg hover:bg-deepCosmos-700/50 group"
-                        whileHover={{ x: 5 }}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      duration: 0.4, 
+                      delay: 0.1,
+                      staggerChildren: 0.05
+                    }}
+                  >
+                    <motion.h3 
+                      className="text-lg lg:text-xl font-bold text-metaEmerald-500 mb-4 flex items-center gap-2"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <motion.div
+                        initial={{ scale: 0.8, rotate: -10 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ duration: 0.4, type: "spring" }}
                       >
-                        <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-metaEmerald-500/10 flex items-center justify-center text-metaEmerald-500 group-hover:bg-metaEmerald-500/20 flex-shrink-0">
-                          {subCategory.icon}
-                        </div>
-                        <span className="text-sm lg:text-base text-quantumGrey-300 group-hover:text-prismWhite break-words">
-                          {subCategory.title}
-                        </span>
-                      </motion.a>
-                    ))}
-                  </div>
+                        {serviceCategories[activeCategory].mainIcon}
+                      </motion.div>
+                      <span className="truncate">{serviceCategories[activeCategory].title}</span>
+                    </motion.h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-3 gap-x-4 lg:gap-x-6">
+                      {serviceCategories[activeCategory].subCategories.map((subCategory, idx) => (
+                        <motion.a
+                          key={idx}
+                          href={`#${serviceCategories[activeCategory].title.toLowerCase().replace(/\s+/g, '-')}-${subCategory.title.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="flex items-center space-x-2 p-2 rounded-lg hover:bg-deepCosmos-700/50 group"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ 
+                            duration: 0.3, 
+                            delay: 0.1 + (idx * 0.05),
+                            ease: "easeOut"
+                          }}
+                          whileHover={{ 
+                            x: 5, 
+                            backgroundColor: "rgba(16, 185, 129, 0.1)",
+                            transition: { duration: 0.2 }
+                          }}
+                        >
+                          <motion.div 
+                            className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-metaEmerald-500/10 flex items-center justify-center text-metaEmerald-500 group-hover:bg-metaEmerald-500/20 flex-shrink-0"
+                            whileHover={{ 
+                              scale: 1.1,
+                              backgroundColor: "rgba(16, 185, 129, 0.2)",
+                              transition: { duration: 0.2, type: "spring", stiffness: 400 }
+                            }}
+                          >
+                            {subCategory.icon}
+                          </motion.div>
+                          <span className="text-sm lg:text-base text-quantumGrey-300 group-hover:text-prismWhite break-words">
+                            {subCategory.title}
+                          </span>
+                        </motion.a>
+                      ))}
+                    </div>
+                  </motion.div>
                 </motion.div>
               )}
+              
+              {/* Services list - Always on the RIGHT side */}
+              <div className={`${showSubcategories ? "w-1/3" : "w-full"} min-w-[200px] bg-deepCosmos-900/30 transition-all duration-300`}>
+                {serviceCategories.map((category, index) => (
+                  <motion.div
+                    key={index}
+                    className={`px-4 py-3 flex items-center space-x-3 cursor-pointer text-sm lg:text-base ${
+                      activeCategory === index 
+                        ? 'bg-metaEmerald-500/10 text-metaEmerald-500' 
+                        : 'text-prismWhite hover:bg-deepCosmos-700/50'
+                    }`}
+                    onMouseEnter={() => handleCategoryHover(index)}
+                    onClick={() => handleCategoryHover(index)}
+                    whileHover={{ x: -5 }}
+                  >
+                    <div className={`flex-shrink-0 ${activeCategory === index ? 'text-metaEmerald-500' : 'text-metaEmerald-500/60'}`}>
+                      {category.mainIcon}
+                    </div>
+                    <span className="font-medium truncate">{category.title}</span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}

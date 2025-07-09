@@ -1,39 +1,54 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useAnimation } from 'framer-motion';
-import HeroCube from '../3d/HeroCube';
+import { motion } from 'framer-motion';
+// import HeroCube from '../3d/HeroCube';
 import { useAppStore } from '../../store/useAppStore';
 import { useMousePosition } from '../../hooks/useMousePosition';
-import ToggleGroup from '../ui/ToggleGroup';
+// import ToggleGroup from '../ui/ToggleGroup';
+import { Boxes } from '../ui/background-boxes';
 
-const ctaMessages = [
-  { id: 0, text: "Need a Qube that slaps?" },
-  { id: 1, text: "Brand's mid? Let's fix that." },
-  { id: 2, text: "Meta without the verse." },
-  { id: 3, text: "Craft digital experiences that matter." },
-  { id: 4, text: "Build beyond boundaries." },
-  { id: 5, text: "Accelerate your digital transformation." },
-];
+// Animation variants for staggered loading
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.3,
+    }
+  }
+};
 
-// Further reduced grid size for better performance
-const GRID_COLS = 4;
-const GRID_ROWS = 4;
-const TOTAL_GRID_CELLS = GRID_COLS * GRID_ROWS;
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1] // Custom ease curve similar to Linear's
+    }
+  }
+};
 
 const Hero: React.FC = () => {
-  const { metaMirrorMode, currentCTA, nextCTA, resetToggleOptions } = useAppStore();
+  const { metaMirrorMode, nextCTA, resetToggleOptions } = useAppStore();
   const mousePosition = useMousePosition();
   const sectionRef = useRef<HTMLElement>(null);
-  const [mouseCoords, setMouseCoords] = useState({ x: 0, y: 0 });
-  const mainOrbControls = useAnimation();
-  const secondaryOrbControls = useAnimation();
-  const pointerControls = useAnimation();
-  const lastUpdateTime = useRef(0);
   const ctaIntervalRef = useRef<number | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [contentLoaded, setContentLoaded] = useState(false);
+  const [hoverPosition, setHoverPosition] = useState<{ x: number, y: number } | null>(null);
   
   // Reset toggle options on mount
   useEffect(() => {
     resetToggleOptions();
+    
+    // Simulate content loading delay
+    const timer = setTimeout(() => {
+      setContentLoaded(true);
+    }, 300);
+    
+    return () => clearTimeout(timer);
   }, [resetToggleOptions]);
   
   // Handle tab visibility changes with a single listener
@@ -44,12 +59,6 @@ const Hero: React.FC = () => {
       
       // When tab becomes visible again, recalculate positions
       if (visible && sectionRef.current && mousePosition.x !== null && mousePosition.y !== null) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const normalizedX = ((mousePosition.x - rect.left) / rect.width) * 2 - 1;
-        const normalizedY = ((mousePosition.y - rect.top) / rect.height) * 2 - 1;
-        
-        setMouseCoords({ x: normalizedX, y: normalizedY });
-        
         // Also pause/resume CTA rotation
         if (!visible) {
           if (ctaIntervalRef.current) {
@@ -70,59 +79,25 @@ const Hero: React.FC = () => {
     };
   }, [mousePosition, nextCTA]);
   
-  // Process mouse movement with throttling
-  useEffect(() => {
-    if (!sectionRef.current || mousePosition.x === null || mousePosition.y === null || !isVisible) return;
-    
-    const now = Date.now();
-    if (now - lastUpdateTime.current < 50) return; // 50ms throttle
-    
-    lastUpdateTime.current = now;
+  // Handle mouse movement for localized hover effect
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!sectionRef.current) return;
     
     const rect = sectionRef.current.getBoundingClientRect();
-    const normalizedX = ((mousePosition.x - rect.left) / rect.width) * 2 - 1;
-    const normalizedY = ((mousePosition.y - rect.top) / rect.height) * 2 - 1;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     
-    setMouseCoords({ x: normalizedX, y: normalizedY });
-    
-    // Animate elements - only when tab is visible
-    if (isVisible) {
-      mainOrbControls.start({
-        left: `${mousePosition.x}px`,
-        top: `${mousePosition.y}px`,
-        transition: { 
-          type: "spring", 
-          damping: 15, 
-          stiffness: 150,
-          mass: 0.6
-        }
-      });
-      
-      secondaryOrbControls.start({
-        right: `${window.innerWidth - mousePosition.x}px`,
-        bottom: `${window.innerHeight - mousePosition.y}px`,
-        transition: { 
-          type: "spring", 
-          damping: 20, 
-          stiffness: 100,
-          mass: 0.9
-        }
-      });
-      
-      pointerControls.start({
-        left: mousePosition.x,
-        top: mousePosition.y,
-        scale: 1,
-        opacity: metaMirrorMode ? 0.15 : 0.08,
-        transition: {
-          type: "spring",
-          damping: 8,
-          stiffness: 250,
-          mass: 0.2
-        }
-      });
+    // Only show spotlight if cursor is below the header area (roughly 100px from top)
+    if (y > 100) {
+      setHoverPosition({ x, y });
+    } else {
+      setHoverPosition(null);
     }
-  }, [mousePosition, mainOrbControls, secondaryOrbControls, pointerControls, metaMirrorMode, isVisible]);
+  };
+  
+  const handleMouseLeave = () => {
+    setHoverPosition(null);
+  };
   
   // CTA message rotation with improved handling
   useEffect(() => {
@@ -139,185 +114,182 @@ const Hero: React.FC = () => {
     };
   }, [nextCTA, isVisible]);
   
-  // Memoize the grid cells to avoid recreating them on every render
-  const gridCells = React.useMemo(() => {
-    return Array.from({ length: TOTAL_GRID_CELLS }).map((_, i) => {
-      const colIndex = i % GRID_COLS;
-      const rowIndex = Math.floor(i / GRID_COLS);
-      
-      return (
-        <motion.div 
-          key={i} 
-          className={`border transition-colors duration-300 ${
-            metaMirrorMode ? 'border-metaEmerald-500/10' : 'border-black/10'
-          }`}
-          style={{
-            width: `${100 / GRID_COLS}%`,
-            height: `${100 / GRID_ROWS}%`,
-            position: 'absolute',
-            left: `${(colIndex / GRID_COLS) * 100}%`,
-            top: `${(rowIndex / GRID_ROWS) * 100}%`,
-            opacity: Math.max(0.1, 
-              0.8 - (Math.abs(
-                colIndex / GRID_COLS - 0.5 + mouseCoords.x * 0.3
-              ) + Math.abs(
-                rowIndex / GRID_ROWS - 0.5 + mouseCoords.y * 0.3
-              )) * 0.8
-            )
-          }}
-        />
-      );
-    });
-  }, [mouseCoords.x, mouseCoords.y, metaMirrorMode]);
+  // Create SVG mask for spotlight effect
+  const spotlightMask = hoverPosition ? `
+    radial-gradient(
+      circle 250px at ${hoverPosition.x}px ${hoverPosition.y}px,
+      white 0%,
+      transparent 90%
+    )
+  ` : 'none';
   
   return (
     <section 
       ref={sectionRef}
       className={`relative min-h-screen flex flex-col items-center justify-center pt-20 sm:pt-24 md:pt-28 overflow-hidden transition-colors duration-500 ${
-        metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-gradient-to-b from-gray-50 via-white to-white'
+        metaMirrorMode ? 'bg-deepCosmos-900' : 'bg-slate-900'
       }`}
+      style={{ fontFamily: "'Inter', sans-serif" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Only render animations when tab is visible */}
-      {isVisible && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Gradient orbs that follow mouse movement */}
-          <motion.div 
-            className="absolute rounded-full blur-3xl will-change-transform"
-            animate={mainOrbControls}
-            initial={{
-              left: "50%",
-              top: "50%",
-            }}
-            style={{
-              background: metaMirrorMode 
-                ? 'radial-gradient(circle, rgba(26, 209, 181, 0.25) 0%, rgba(26, 209, 181, 0) 70%)' 
-                : 'radial-gradient(circle, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0) 70%)',
-              width: '60vw',
-              height: '60vw',
-              transform: 'translate(-50%, -50%)',
-              opacity: metaMirrorMode ? 0.9 : 1,
-              transformOrigin: 'center center',
-              position: 'absolute'
-            }}
-          />
-          
-          {/* Secondary glow that moves opposite to mouse */}
-          <motion.div 
-            className="absolute rounded-full blur-3xl will-change-transform"
-            animate={secondaryOrbControls}
-            initial={{
-              right: "50%",
-              bottom: "50%",
-            }}
-            style={{
-              background: metaMirrorMode 
-                ? 'radial-gradient(circle, rgba(120, 255, 214, 0.15) 0%, rgba(120, 255, 214, 0) 70%)' 
-                : 'radial-gradient(circle, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0) 75%)',
-              width: '70vw',
-              height: '70vw',
-              transform: 'translate(50%, 50%)',
-              opacity: metaMirrorMode ? 0.7 : 1,
-              transformOrigin: 'center center',
-              position: 'absolute'
-            }}
-          />
-          
-          {/* Simplified grid background with optimized rendering */}
-          <div className="absolute inset-0 opacity-10">
-            {gridCells}
-          </div>
-          
-          {/* Pointer highlight effect */}
-          <motion.div
-            className="absolute rounded-full pointer-events-none will-change-transform"
-            animate={pointerControls}
-            initial={{
-              left: "50%",
-              top: "50%",
-              scale: 0,
-              opacity: 0
-            }}
-            style={{
-              background: metaMirrorMode 
-                ? 'radial-gradient(circle, rgba(26, 209, 181, 1) 0%, rgba(26, 209, 181, 0) 70%)'
-                : 'radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 70%)',
-              width: '15rem',
-              height: '15rem',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
-        </div>
-      )}
-      
-      <div className="container mx-auto px-4 sm:px-6 z-10 flex flex-col items-center">
-        <motion.div
-          className="text-center mb-8 sm:mb-10 md:mb-12 mt-6 sm:mt-8 md:mt-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+      {/* Background boxes with localized hover effect */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        {/* Dark background to ensure boxes are only visible through the spotlight */}
+        {/* <div className="absolute inset-0 bg-slate-900" /> */}
+        
+        <div 
+          className="absolute inset-0 z-1"
+          style={{
+            maskImage: spotlightMask,
+            WebkitMaskImage: spotlightMask,
+            maskSize: '100% 100%',
+            WebkitMaskSize: '100% 100%',
+            maskRepeat: 'no-repeat',
+            WebkitMaskRepeat: 'no-repeat',
+            backgroundColor: 'transparent',
+          }}
         >
-          <motion.h1 
-            className="font-extrabold mb-6 sm:mb-8 tracking-tight"
+          <Boxes />
+        </div>
+      </div>
+      
+      {/* Background pattern */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+        <div className="absolute top-0 left-0 w-full h-full" 
+          style={{
+            backgroundImage: metaMirrorMode 
+              ? 'radial-gradient(circle at 20% 20%, rgba(26, 209, 181, 0.15) 0%, transparent 20%), radial-gradient(circle at 80% 60%, rgba(26, 209, 181, 0.1) 0%, transparent 20%)'
+              : 'radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.05) 0%, transparent 20%), radial-gradient(circle at 80% 60%, rgba(0, 0, 0, 0.03) 0%, transparent 20%)',
+            backgroundSize: '120% 120%',
+            backgroundPosition: 'center'
+          }}
+        />
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 opacity-30"
+          style={{
+            background: metaMirrorMode
+              ? 'linear-gradient(135deg, rgba(26, 209, 181, 0.2) 0%, transparent 100%)'
+              : 'linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, transparent 100%)'
+          }}
+        />
+        <div className="absolute bottom-0 left-0 w-1/4 h-1/4 opacity-20"
+          style={{
+            background: metaMirrorMode
+              ? 'linear-gradient(45deg, rgba(26, 209, 181, 0.15) 0%, transparent 100%)'
+              : 'linear-gradient(45deg, rgba(0, 0, 0, 0.03) 0%, transparent 100%)'
+          }}
+        />
+      </div>
+      
+      {/* Floating elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute w-16 h-16 rounded-full"
+          initial={{ x: '10%', y: '20%' }}
+          animate={{ 
+            x: ['10%', '15%', '10%'], 
+            y: ['20%', '25%', '20%'] 
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          style={{
+            background: metaMirrorMode
+              ? 'radial-gradient(circle, rgba(26, 209, 181, 0.3) 0%, rgba(26, 209, 181, 0) 70%)'
+              : 'radial-gradient(circle, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0) 70%)',
+            filter: 'blur(8px)'
+          }}
+        />
+        <motion.div
+          className="absolute w-24 h-24 rounded-full"
+          initial={{ x: '80%', y: '70%' }}
+          animate={{ 
+            x: ['80%', '75%', '80%'], 
+            y: ['70%', '65%', '70%'] 
+          }}
+          transition={{ 
+            duration: 10, 
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          style={{
+            background: metaMirrorMode
+              ? 'radial-gradient(circle, rgba(26, 209, 181, 0.2) 0%, rgba(26, 209, 181, 0) 70%)'
+              : 'radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0) 70%)',
+            filter: 'blur(10px)'
+          }}
+        />
+      </div>
+      
+      {/* Container for main content */}
+      <div className="container mx-auto px-4 sm:px-6 z-20 flex flex-col items-center relative">
+        {/* Hero content with staggered loading animation */}
+        <motion.div
+          className="text-center mb-10 sm:mb-12 md:mb-16 mt-6 sm:mt-8 md:mt-10 max-w-4xl"
+          variants={containerVariants}
+          initial="hidden"
+          animate={contentLoaded ? "visible" : "hidden"}
+        >
+          {/* Brand name */}
+          <motion.p 
+            variants={itemVariants}
+            className="text-sm sm:text-base md:text-lg font-semibold tracking-wide uppercase mb-4 sm:mb-5 text-metaEmerald-400"
           >
-            <span className={`inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl ${
-              metaMirrorMode 
-                ? 'bg-clip-text text-transparent bg-gradient-to-r from-metaEmerald-500 to-metaEmerald-400' 
-                : 'bg-clip-text text-transparent bg-gradient-to-r from-black via-black to-gray-900'
-            }`}>METAQUBE</span>
+            METAQUBE
+          </motion.p>
+
+          {/* Main headline with gradient text */}
+          <motion.h1 
+            className="font-extrabold mb-6 sm:mb-8 tracking-tight leading-tight"
+            variants={itemVariants}
+          >
+            {/* First part with gradient */}
+            <span className="inline-block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black bg-gradient-to-b from-gray-200 to-white bg-clip-text text-transparent">
+              Powering Digital
+            </span>
+            <br/>
+            {/* Second part in pure white */}
+            <span className="inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white">
+              Innovation with Web3 + AI
+            </span>
           </motion.h1>
           
-          <motion.p 
-            className={`text-center max-w-md sm:max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 py-3 ${
-              metaMirrorMode ? 'text-quantumGrey-200' : 'text-gray-800'
+          {/* Animated highlight badge */}
+          <motion.div
+            variants={itemVariants}
+            className={`inline-block px-4 py-2 rounded-full text-sm font-medium mb-8 ${
+              metaMirrorMode 
+                ? 'bg-metaEmerald-500/20 text-metaEmerald-400' 
+                : 'bg-black/20 text-gray-100'
             }`}
           >
-            <span className={`block text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 ${
-              metaMirrorMode ? 'text-metaEmerald-500' : 'text-black'
-            }`}>
-              We build Quality tech
-            </span>
-            <div className="space-y-2">
-              <span className="block text-base sm:text-lg md:text-xl text-center">
-                Team of engineers dedicated to build
-              </span>
-              <span className="block text-base sm:text-lg md:text-xl text-center">
-                Future of Internet using web3 and AI with
-              </span>
-              <span className="block text-base sm:text-lg md:text-xl text-center">
-                Artist-like precision.
-              </span>
-            </div>
-          </motion.p>
+            <span className="mr-2">✨</span> Enterprise-grade blockchain solutions
+          </motion.div>
+          
+          {/* Subheading with clearer value proposition */}
+          <motion.div 
+            variants={itemVariants}
+            className="text-center max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 text-gray-200"
+          >
+            <p className="text-base sm:text-lg md:text-xl max-w-xl mx-auto font-medium">
+              Enterprise-grade blockchain infrastructure with AI intelligence. Trusted by industry leaders for secure, scalable solutions that transform business operations.
+            </p>
+          </motion.div>
         </motion.div>
         
+        {/* Single CTA Button with enhanced styling - MOVED TO LAST */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-10 sm:mb-14 md:mb-18 w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] mx-auto"
-        >
-          <HeroCube />
-        </motion.div>
-        
-        {/* Add ToggleGroup component */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mb-8 sm:mb-12 md:mb-16 w-full max-w-[280px] sm:max-w-lg md:max-w-xl px-2 sm:px-4"
-        >
-          <ToggleGroup />
-        </motion.div>
-        
-        <motion.div
-          className="flex flex-col items-center space-y-4 sm:space-y-6 md:space-y-8 mb-6 sm:mb-8 md:mb-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          className="flex items-center justify-center mb-16 sm:mb-20 md:mb-24 mt-12"
+          variants={itemVariants}
+          initial="hidden"
+          animate={contentLoaded ? "visible" : "hidden"}
+          transition={{ delay: 2.2 }}
         >
           <motion.a
             href="#build-qube"
-            className={`px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-lg text-base sm:text-lg md:text-xl font-bold shadow-xl transition-all ${
+            className={`px-10 sm:px-12 py-5 sm:py-6 rounded-lg text-lg sm:text-xl font-bold shadow-xl transition-all ${
               metaMirrorMode 
                 ? 'bg-gradient-to-r from-metaEmerald-500 to-metaEmerald-400 text-deepCosmos-900 shadow-metaEmerald-500/20 hover:from-metaEmerald-400 hover:to-metaEmerald-500' 
                 : 'bg-black text-white shadow-black/15 hover:bg-gray-900'
@@ -325,14 +297,37 @@ const Hero: React.FC = () => {
             whileHover={{ 
               scale: 1.05,
               boxShadow: metaMirrorMode 
-                ? '0 15px 30px -10px rgba(26, 209, 181, 0.3)'
-                : '0 15px 30px -10px rgba(0, 0, 0, 0.2)'
+                ? '0 20px 40px -15px rgba(26, 209, 181, 0.5)'
+                : '0 20px 40px -15px rgba(0, 0, 0, 0.4)'
             }}
             whileTap={{ scale: 0.95 }}
           >
-            Inquire
+            Let's Build Together
           </motion.a>
         </motion.div>
+        
+        {/* <motion.div
+          variants={itemVariants}
+          initial="hidden"
+          animate={contentLoaded ? "visible" : "hidden"}
+          transition={{ delay: 1.1 }}
+          className="mb-8 sm:mb-10 w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] mx-auto"
+        >
+          <HeroCube />
+        </motion.div>
+
+        
+        <motion.div
+          variants={itemVariants}
+          initial="hidden"
+          animate={contentLoaded ? "visible" : "hidden"}
+          transition={{ delay: 1.8 }}
+          className="mb-10 sm:mb-12 md:mb-16 w-full max-w-[280px] sm:max-w-lg md:max-w-xl px-2 sm:px-4"
+        >
+          <ToggleGroup />
+        </motion.div>  */}
+
+        
       </div>
     </section>
   );
