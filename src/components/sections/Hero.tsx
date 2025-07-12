@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-// import HeroCube from '../3d/HeroCube';
+import HeroCube from '../3d/HeroCube';
 import { useAppStore } from '../../store/useAppStore';
 import { useMousePosition } from '../../hooks/useMousePosition';
-// import ToggleGroup from '../ui/ToggleGroup';
+import ToggleGroup from '../ui/ToggleGroup';
 import { Boxes } from '../ui/background-boxes';
-
+import PickAnyTwo from '../ui/PickAnyTwo';
+import PickAnyTwoGlowing from '../ui/PickAnyTwoGlowing';
 // Animation variants for staggered loading
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -124,6 +125,7 @@ const Hero: React.FC = () => {
   ` : 'none';
   
   return (
+    <>
     <section 
       ref={sectionRef}
       className={`relative min-h-screen flex flex-col items-center justify-center pt-20 sm:pt-24 md:pt-28 overflow-hidden transition-colors duration-500 ${
@@ -224,112 +226,88 @@ const Hero: React.FC = () => {
       </div>
       
       {/* Container for main content */}
-      <div className="container mx-auto px-4 sm:px-6 z-20 flex flex-col items-center relative">
-        {/* Hero content with staggered loading animation */}
+      <div className="container mx-auto px-4 sm:px-6 z-20 flex flex-col md:flex-row items-center justify-between relative min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh]">
+        {/* Left: Headline and content */}
         <motion.div
-          className="text-center mb-10 sm:mb-12 md:mb-16 mt-6 sm:mt-8 md:mt-10 max-w-4xl"
+          className="w-full md:w-3/5 md:pr-12 text-center md:text-left mb-10 md:mb-0"
           variants={containerVariants}
           initial="hidden"
-          animate={contentLoaded ? "visible" : "hidden"}
+          animate={contentLoaded ? 'visible' : 'hidden'}
         >
-          {/* Brand name */}
           <motion.p 
             variants={itemVariants}
-            className="text-sm sm:text-base md:text-lg font-semibold tracking-wide uppercase mb-4 sm:mb-5 text-metaEmerald-400"
+            className="text-xs sm:text-sm md:text-base font-semibold tracking-widest uppercase mb-4 text-metaEmerald-400 letter-spacing-wide"
           >
             METAQUBE
           </motion.p>
-
-          {/* Main headline with gradient text */}
           <motion.h1 
-            className="font-extrabold mb-6 sm:mb-8 tracking-tight leading-tight"
+            className="font-extrabold mb-6 sm:mb-8 tracking-tight leading-tight text-4xl sm:text-5xl md:text-6xl lg:text-7xl bg-gradient-to-br from-white via-metaEmerald-400 to-metaEmerald-600 bg-clip-text text-transparent drop-shadow-xl"
             variants={itemVariants}
           >
-            {/* First part with gradient */}
-            <span className="inline-block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black bg-gradient-to-b from-gray-200 to-white bg-clip-text text-transparent">
-              Powering Digital
-            </span>
-            <br/>
-            {/* Second part in pure white */}
-            <span className="inline-block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white">
-              Innovation with Web3 + AI
-            </span>
+            Build the Future.<br className="hidden sm:block" />
+            <span className="text-white/90">Web3, AI & Beyond</span>
           </motion.h1>
-          
-          {/* Animated highlight badge */}
           <motion.div
             variants={itemVariants}
-            className={`inline-block px-4 py-2 rounded-full text-sm font-medium mb-8 ${
-              metaMirrorMode 
-                ? 'bg-metaEmerald-500/20 text-metaEmerald-400' 
-                : 'bg-black/20 text-gray-100'
-            }`}
+            className="inline-block px-6 py-2 rounded-full text-base font-semibold mb-7 bg-metaEmerald-500/10 text-metaEmerald-400 border border-metaEmerald-400/30 shadow-md backdrop-blur-sm"
           >
-            <span className="mr-2">✨</span> Enterprise-grade blockchain solutions
+            🚀 Next-gen Blockchain & AI Solutions
           </motion.div>
-          
-          {/* Subheading with clearer value proposition */}
           <motion.div 
             variants={itemVariants}
-            className="text-center max-w-2xl mx-auto leading-relaxed px-2 sm:px-4 text-gray-200"
+            className="max-w-2xl leading-relaxed px-2 sm:px-4 text-gray-200 mx-auto md:mx-0 mb-8"
           >
-            <p className="text-base sm:text-lg md:text-xl max-w-xl mx-auto font-medium">
-              Enterprise-grade blockchain infrastructure with AI intelligence. Trusted by industry leaders for secure, scalable solutions that transform business operations.
+            <p className="text-lg sm:text-xl md:text-2xl font-medium text-white/80">
+              Empowering enterprises to innovate, scale, and lead with secure, intelligent, and future-ready digital infrastructure.
             </p>
           </motion.div>
-        </motion.div>
-        
-        {/* Single CTA Button with enhanced styling - MOVED TO LAST */}
-        <motion.div
-          className="flex items-center justify-center mb-16 sm:mb-20 md:mb-24 mt-12"
-          variants={itemVariants}
-          initial="hidden"
-          animate={contentLoaded ? "visible" : "hidden"}
-          transition={{ delay: 2.2 }}
-        >
-          <motion.a
-            href="#build-qube"
-            className={`px-10 sm:px-12 py-5 sm:py-6 rounded-lg text-lg sm:text-xl font-bold shadow-xl transition-all ${
-              metaMirrorMode 
-                ? 'bg-gradient-to-r from-metaEmerald-500 to-metaEmerald-400 text-deepCosmos-900 shadow-metaEmerald-500/20 hover:from-metaEmerald-400 hover:to-metaEmerald-500' 
-                : 'bg-black text-white shadow-black/15 hover:bg-gray-900'
-            }`}
-            whileHover={{ 
-              scale: 1.05,
-              boxShadow: metaMirrorMode 
-                ? '0 20px 40px -15px rgba(26, 209, 181, 0.5)'
-                : '0 20px 40px -15px rgba(0, 0, 0, 0.4)'
-            }}
-            whileTap={{ scale: 0.95 }}
+          <motion.div
+            className="flex items-center justify-center md:justify-start mt-8"
+            variants={itemVariants}
+            initial="hidden"
+            animate={contentLoaded ? 'visible' : 'hidden'}
+            transition={{ delay: 1.2 }}
           >
-            Let's Build Together
-          </motion.a>
+            <motion.a
+              href="#build-qube"
+              className={`px-10 sm:px-12 py-5 sm:py-6 rounded-lg text-lg sm:text-xl font-bold shadow-xl transition-all focus:outline-none focus:ring-4 focus:ring-metaEmerald-400/40 ${
+                metaMirrorMode 
+                  ? 'bg-gradient-to-r from-metaEmerald-500 to-metaEmerald-400 text-deepCosmos-900 shadow-metaEmerald-500/20 hover:from-metaEmerald-400 hover:to-metaEmerald-500' 
+                  : 'bg-white text-deepCosmos-900 shadow-black/10 hover:bg-gray-100'
+              }`}
+              whileHover={{ 
+                scale: 1.05
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Start Your Journey
+            </motion.a>
+          </motion.div>
         </motion.div>
-        
-        {/* <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate={contentLoaded ? "visible" : "hidden"}
-          transition={{ delay: 1.1 }}
-          className="mb-8 sm:mb-10 w-full max-w-[250px] sm:max-w-[300px] md:max-w-[350px] mx-auto"
-        >
-          <HeroCube />
-        </motion.div>
-
-        
-        <motion.div
-          variants={itemVariants}
-          initial="hidden"
-          animate={contentLoaded ? "visible" : "hidden"}
-          transition={{ delay: 1.8 }}
-          className="mb-10 sm:mb-12 md:mb-16 w-full max-w-[280px] sm:max-w-lg md:max-w-xl px-2 sm:px-4"
-        >
-          <ToggleGroup />
-        </motion.div>  */}
-
-        
+        {/* Right: HeroCube, no box */}
+        <div className="w-full md:w-2/5 flex items-center justify-center">
+          <div className="relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[420px] lg:max-w-[480px] aspect-square flex items-center justify-center">
+            <div className="relative z-10 scale-110 sm:scale-125 md:scale-125 drop-shadow-2xl">
+              {contentLoaded && <HeroCube />}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
+    <section className="w-full flex justify-center bg-transparent">
+      <motion.div
+        variants={itemVariants}
+        initial="hidden"
+        animate={contentLoaded ? 'visible' : 'hidden'}
+        transition={{ delay: 1.8 }}
+        className="my-10 sm:my-12 md:my-16 w-full max-w-[280px] sm:max-w-lg md:max-w-xl px-2 sm:px-4 mx-auto"
+      >
+        <ToggleGroup />
+      </motion.div>
+    </section>
+    {/* Futuristic Pick Any Two section */}
+    {/* <PickAnyTwoGlowing /> */}
+    </>
   );
 };
 
