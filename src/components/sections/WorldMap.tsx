@@ -1,78 +1,53 @@
-// components/WorldMap.tsx
-import React, { useState } from "react";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-} from "react-simple-maps";
+"use client";
+import WorldMapUI from "../ui/world-map";
+import { motion } from "motion/react";
 
-// TopoJSON URL
-const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
-
-// Highlighted countries with client counts
-const highlightedCountries: Record<string, { clients: number }> = {
-  USA: { clients: 12 },
-  IND: { clients: 30 },
-  CAN: { clients: 5 },
-  BEL: { clients: 3 },
-  HKG: { clients: 7 },
-  KHM: { clients: 4 },
-  ARE: { clients: 2 },
-};
-
-const WorldMap: React.FC = () => {
-  const [tooltipContent, setTooltipContent] = useState<string>("");
-
+const WorldMap=()=> {
   return (
-    // <div className="w-full flex flex-col items-center justify-center py-8 px-2 sm:px-8 md:px-16 bg-black rounded-xl">
-    //   <h2 className="text-center text-[#0ff] text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6" style={{ fontFamily: "'Inter', sans-serif" }}>
-    //     Our Global Presence
-    //   </h2>
-    //   <div className="w-full max-w-4xl h-[320px] sm:h-[420px] md:h-[520px] lg:h-[600px] mx-auto">
-    //     <ComposableMap
-    //       projectionConfig={{ scale: 160 }}
-    //       style={{ width: "100%", height: "100%" }}
-    //     >
-    //       <Geographies geography={geoUrl}>
-    //         {({ geographies }) =>
-    //           geographies.map((geo) => {
-    //             const iso = geo.properties.ISO_A3;
-    //             const isHighlighted = highlightedCountries[iso];
-    //             return (
-    //               <Geography
-    //                 key={geo.rsmKey}
-    //                 geography={geo}
-    //                 onMouseEnter={() => {
-    //                   const { NAME } = geo.properties;
-    //                   const clients = isHighlighted?.clients ?? 0;
-    //                   if (isHighlighted) {
-    //                     setTooltipContent(`${NAME}: ${clients} clients`);
-    //                   }
-    //                 }}
-    //                 onMouseLeave={() => setTooltipContent("")}
-    //                 fill={isHighlighted ? "#00ffff" : "#222"}
-    //                 stroke="#444"
-    //                 style={{
-    //                   default: { outline: "none" },
-    //                   hover: { fill: "#0ff", outline: "none" },
-    //                   pressed: { outline: "none" },
-    //                 }}
-    //               />
-    //             );
-    //           })
-    //         }
-    //       </Geographies>
-    //     </ComposableMap>
-    //   </div>
-    //   {tooltipContent && (
-    //     <div className="text-center mt-4 text-white text-base sm:text-lg font-mono">
-    //       {tooltipContent}
-    //     </div>
-    //   )}
-    // </div>
-    <>
-    </>
+    <div className=" py-40 dark:bg-black bg-white w-full">
+      <div className="max-w-7xl mx-auto text-center">
+  <p className="font-bold text-xl md:text-4xl dark:text-white text-black">
+    Global{" "}
+    <span className="text-neutral-400">
+      {"Reach & Impact".split("").map((word, idx) => (
+        <motion.span
+          key={idx}
+          className="inline-block"
+          initial={{ x: -10, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: idx * 0.04 }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </span>
+  </p>
+  <p className="text-sm md:text-lg text-neutral-500 max-w-2xl mx-auto py-4">
+    We help businesses around the globe build powerful web, AI, and cloud solutions.
+    Our services power clients across industries in multiple countries — and counting.
+  </p>
+</div>
+
+      <WorldMapUI
+        dots={[
+  {
+    start: { lat: 64.2008, lng: -149.4937 },
+    end: { lat: 34.0522, lng: -118.2437, label: "USA", clientCount: 5 },
+  },
+  {
+    start: { lat: 64.2008, lng: -149.4937 },
+    end: { lat: -15.7975, lng: -47.8919, label: "Brazil", clientCount: 2 },
+  },
+  {
+    start: { lat: 28.6139, lng: 77.209 },
+    end: { lat: -1.2921, lng: 36.8219, label: "Kenya", clientCount: 1 },
+  },
+  // ...add more
+]}
+
+      />
+    </div>
   );
-};
+}
 
 export default WorldMap;

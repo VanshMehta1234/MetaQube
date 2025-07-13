@@ -204,12 +204,15 @@ const FrensMap: React.FC = () => {
     // Use the current position as starting point for smoother transition
     const currentPos = carouselPosition % 100;
     
+    // Detect mobile device
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    
     controls.start({
       // Animation moves from current position through a full cycle
       x: [`-${currentPos}%`, `-${currentPos + 100}%`],
       transition: {
         x: {
-          duration: 60,
+          duration: isMobile ? 10 : 60, // Faster on mobile
           ease: "linear",
           repeat: Infinity,
           repeatType: "loop"

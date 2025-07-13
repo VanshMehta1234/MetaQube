@@ -355,3 +355,13 @@ button:focus-visible {
 .will-change-transform {
   will-change: transform;
 }
+
+.img-container img {
+  width: 300px;
+  height: 400px;
+}
+
+.progress {
+  transform-origin: left;
+  transform: scaleX(0);
+}

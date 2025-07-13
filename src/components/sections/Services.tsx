@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Cuboid as Cube, Cpu, Brush, Rocket, Building, Gem, X,
+import { motion } from 'framer-motion';
+import {
+  Cuboid as Cube, Cpu, Brush, Rocket, Building, Gem,
   Bitcoin, Code, Network, Users, BarChart, Activity,
   DatabaseIcon, PieChart, Globe, Share2, UserPlus, ShoppingBag,
   Home, ImageIcon, Map, Key, Wrench, Bot, LineChart, Webhook,
@@ -15,12 +15,6 @@ interface ServiceProps {
   title: string;
   description: string;
   onClick: () => void;
-}
-
-interface SubCategory {
-  title: string;
-  icon: React.ReactNode;
-  description: string;
 }
 
 // Service data with subcategories
@@ -105,18 +99,50 @@ const serviceData: ServiceDetails[] = [
     ]
   }
 ];
+const services = [
+  {
+    title: "Web3 Development",
+    icon: "🧱",
+    description: "Build decentralized apps, smart contracts, and blockchain solutions.",
+    size: "md:col-span-3",
+  },
+  {
+    title: "Brand Consultation",
+    icon: "💡",
+    description: "We help launch successful AI/Web3 brands. 50+ brands scaled.",
+    size: "md:col-span-3",
+  },
+  {
+    title: "AI Development",
+    icon: "🤖",
+    description: "Smart systems with NLP, computer vision, and generative AI.",
+    size: "md:col-span-4 md:row-span-2",
+  },
+  {
+    title: "Metaverse Experiences",
+    icon: "🌐",
+    description: "AR/VR environments with Sandbox, Decentraland, and more.",
+    size: "md:col-span-2",
+  },
+  {
+    title: "Dev Sprints",
+    icon: "⚡",
+    description: "Accelerate delivery with dedicated product engineering pods.",
+    size: "md:col-span-2",
+  },
+];
+
 
 // Service Card Component
 const ServiceCard: React.FC<ServiceProps> = ({ icon, title, description, onClick }) => {
   const { metaMirrorMode } = useAppStore();
-  
+
   return (
-    <motion.div 
-      className={`p-6 rounded-lg border transition-all cursor-pointer ${
-        metaMirrorMode 
-          ? 'bg-deepCosmos-800 border-deepCosmos-700 hover:border-metaEmerald-700' 
+    <motion.div
+      className={`p-6 rounded-lg border transition-all cursor-pointer ${metaMirrorMode
+          ? 'bg-deepCosmos-800 border-deepCosmos-700 hover:border-metaEmerald-700'
           : 'bg-prismWhite border-quantumGrey-200 hover:border-metaEmerald-300'
-      }`}
+        }`}
       whileHover={{ y: -10, boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}
       onClick={onClick}
     >
@@ -125,16 +151,14 @@ const ServiceCard: React.FC<ServiceProps> = ({ icon, title, description, onClick
           {icon}
         </div>
       </div>
-      
-      <h3 className={`text-xl font-bold mb-2 ${
-        metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
-      }`}>
+
+      <h3 className={`text-xl font-bold mb-2 ${metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
+        }`}>
         {title}
       </h3>
-      
-      <p className={`${
-        metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
-      }`}>
+
+      <p className={`${metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
+        }`}>
         {description}
       </p>
     </motion.div>
@@ -146,14 +170,14 @@ const Services: React.FC = () => {
   const fragment = easterEggFragments.find(f => f.id === 'fragment1');
   const [selectedService, setSelectedService] = useState<ServiceDetails | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // Easter egg fragment
   const handleFragmentClick = () => {
     if (fragment && !fragment.found) {
       findEasterEggFragment('fragment1');
     }
   };
-  
+
   // Handle service card click
   const handleServiceClick = (serviceId: string) => {
     const service = serviceData.find(s => s.id === serviceId);
@@ -162,35 +186,32 @@ const Services: React.FC = () => {
       setIsModalOpen(true);
     }
   };
-  
+
   // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
+
   return (
-    <section 
-      id="services" 
-      className={`py-24 transition-colors ${
-        metaMirrorMode ? 'bg-deepCosmos-800' : 'bg-quantumGrey-50'
-      }`}
+    <section
+      id="services"
+      className={`py-24 transition-colors ${metaMirrorMode ? 'bg-deepCosmos-800' : 'bg-quantumGrey-50'
+        }`}
     >
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 relative">
-          <h2 className={`text-4xl font-bold mb-4 ${
-            metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
-          }`}>
-            Our <span className="text-metaEmerald-500">Services</span>
+          <h2 className="text-3xl font-bold text-center mb-4">
+            Our <span className="text-[#3fa7f5]">Services</span>
           </h2>
-          <p className={`text-lg max-w-2xl mx-auto ${
-            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
-          }`}>
+
+          <p className={`text-lg max-w-2xl mx-auto ${metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
+            }`}>
             We help businesses to get equipped with latest tech efficiency.
           </p>
-          
+
           {/* Hidden easter egg fragment */}
           {fragment && !fragment.found && (
-            <motion.div 
+            <motion.div
               className="absolute top-0 right-0 w-3 h-3 cursor-pointer"
               whileHover={{ scale: 1.5 }}
               onClick={handleFragmentClick}
@@ -199,8 +220,8 @@ const Services: React.FC = () => {
             </motion.div>
           )}
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {serviceData.map((service) => (
           <ServiceCard 
               key={service.id}
@@ -210,12 +231,74 @@ const Services: React.FC = () => {
               onClick={() => handleServiceClick(service.id)}
             />
           ))}
+        </div> */}
+        {/* <div className="px-6 py-20 bg-black text-white">
+  <div className="text-center mb-12">
+    <h2 className="text-4xl font-bold">Our <span className="text-green-400">Services</span></h2>
+    <p className="text-gray-400 mt-3 max-w-xl mx-auto">
+      Discover how we empower startups & enterprises with AI, Web3, and immersive digital solutions.
+    </p>
+  </div>
+
+  <div className="grid gap-6 md:grid-cols-6 auto-rows-[minmax(180px,_auto)]">
+    
+    <div className="md:col-span-2 bg-[#101010] p-6 rounded-2xl border border-[#1a1a1a] hover:border-green-400 hover:shadow-green-500/20 transition shadow-md">
+      <div className="text-3xl mb-3">🧱</div>
+      <h3 className="text-xl font-bold mb-2">Web3 Development</h3>
+      <p className="text-gray-400 text-sm">Build decentralized apps, smart contracts, and blockchain solutions.</p>
+    </div>
+
+    <div className="md:col-span-4 bg-[#111111] p-6 rounded-2xl border border-[#1a1a1a] hover:border-green-400 hover:shadow-green-500/20 transition shadow-md">
+      <div className="text-3xl mb-3">💡</div>
+      <h3 className="text-xl font-bold mb-2">Brand Consultation</h3>
+      <p className="text-gray-400 text-sm">We help launch successful AI/Web3 brands. 50+ brands scaled.</p>
+    </div>
+
+    <div className="md:col-span-3 md:row-span-2 bg-gradient-to-br from-[#0f0f0f] to-[#1f1f1f] p-8 rounded-2xl border border-green-500 hover:shadow-lg shadow-green-400/30 transition transform hover:scale-[1.02]">
+      <div className="text-4xl mb-4 animate-pulse">🤖</div>
+      <h3 className="text-2xl font-bold mb-2">AI Development</h3>
+      <p className="text-gray-300 text-sm leading-relaxed">Smart systems with NLP, computer vision, and generative AI. From automation to recommendation engines — we build it all.</p>
+    </div>
+
+    <div className="md:col-span-3 bg-[#101010] p-6 rounded-2xl border border-[#1a1a1a] hover:border-green-400 transition shadow-md hover:shadow-green-500/10">
+      <div className="text-3xl mb-3">🌐</div>
+      <h3 className="text-xl font-bold mb-2">Metaverse Experiences</h3>
+      <p className="text-gray-400 text-sm">AR/VR environments with Sandbox, Decentraland, and more.</p>
+    </div>
+
+    <div className="md:col-span-3 bg-[#111111] p-6 rounded-2xl border border-[#1a1a1a] hover:border-green-400 transition shadow-md hover:shadow-green-500/10">
+      <div className="text-3xl mb-3">⚡</div>
+      <h3 className="text-xl font-bold mb-2">Dev Sprints</h3>
+      <p className="text-gray-400 text-sm">Accelerate delivery with dedicated product engineering pods.</p>
+    </div>
+
+  </div>
+</div> */}
+        <div className="grid gap-6 md:grid-cols-6 auto-rows-[minmax(180px,_auto)] text-white">
+          {services.map((service, index) => (
+            <div
+              key={service.title}
+              className={`
+        ${service.size || "md:col-span-3"} 
+        bg-gradient-to-br from-[#0f0f1a] to-[#0a0a1a]
+        p-6 rounded-2xl border border-[#1b2c3f]
+        hover:border-[#3fa7f5] hover:shadow-[0_0_20px_#3fa7f599]
+        transition-all duration-300 ease-in-out
+      `}
+            >
+              <div className="text-3xl mb-3">{service.icon}</div>
+              <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{service.description}</p>
+            </div>
+          ))}
         </div>
+
+
       </div>
-      
+
       {/* Service Modal */}
       {selectedService && (
-        <ServiceModal 
+        <ServiceModal
           service={selectedService}
           isOpen={isModalOpen}
           onClose={closeModal}
