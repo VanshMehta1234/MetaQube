@@ -96,9 +96,7 @@ const BuildYourQube: React.FC = () => {
               ? 'text-prismWhite' 
               : 'bg-clip-text text-transparent bg-gradient-to-r from-black via-black to-gray-900'
           }`}>
-            Build Your Own <span className={`${
-              metaMirrorMode ? 'text-metaEmerald-500' : 'text-metaEmerald-600'
-            }`}>Qube</span>
+            Build Your Own <span className={"text-[#3fa7f5]"}>Qube</span>
           </h2>
           <p className={`text-xl max-w-2xl mx-auto ${
             metaMirrorMode ? 'text-quantumGrey-300' : 'text-gray-700'

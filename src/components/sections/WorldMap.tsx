@@ -1,53 +1,130 @@
 "use client";
-import WorldMapUI from "../ui/world-map";
+import { lazy, Suspense, memo } from "react";
 import { motion } from "motion/react";
 
-const WorldMap=()=> {
+// Lazy load the WorldMapUI component to improve initial page load performance
+const WorldMapUI = lazy(() => import("../ui/world-map"));
+
+// Define central hub points for better performance and visual appearance
+const ASIA_HUB = { lat: 34.0479, lng: 100.6197 }; // Central Asia
+const NORTH_AMERICA_HUB = { lat: 54.5260, lng: -105.2551 }; // Central Canada
+const EUROPE_HUB = { lat: 54.5260, lng: 15.2551 }; // Central Europe
+
+const WorldMap = () => {
   return (
-    <div className=" py-40 dark:bg-black bg-white w-full">
-      <div className="max-w-7xl mx-auto text-center">
-  <p className="font-bold text-xl md:text-4xl dark:text-white text-black">
-    Global{" "}
-    <span className="text-neutral-400">
-      {"Reach & Impact".split("").map((word, idx) => (
-        <motion.span
-          key={idx}
-          className="inline-block"
-          initial={{ x: -10, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: idx * 0.04 }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </span>
-  </p>
-  <p className="text-sm md:text-lg text-neutral-500 max-w-2xl mx-auto py-4">
-    We help businesses around the globe build powerful web, AI, and cloud solutions.
-    Our services power clients across industries in multiple countries — and counting.
-  </p>
-</div>
+    <div className="py-40 dark:bg-black bg-white w-full">
+      <div className="max-w-7xl mx-auto text-center mb-16 pt-20">
+        <h2 className="font-bold text-2xl md:text-5xl text-white mb-4">
+          <motion.span
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Global&nbsp;
+          </motion.span>
+          <motion.span
+            className="text-[#3fa7f5]"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Reach&nbsp;
+          </motion.span>
+          <motion.span
+            className="text-[#3fa7f5]"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            & Impact
+          </motion.span>
+        </h2>
 
-      <WorldMapUI
-        dots={[
-  {
-    start: { lat: 64.2008, lng: -149.4937 },
-    end: { lat: 34.0522, lng: -118.2437, label: "USA", clientCount: 5 },
-  },
-  {
-    start: { lat: 64.2008, lng: -149.4937 },
-    end: { lat: -15.7975, lng: -47.8919, label: "Brazil", clientCount: 2 },
-  },
-  {
-    start: { lat: 28.6139, lng: 77.209 },
-    end: { lat: -1.2921, lng: 36.8219, label: "Kenya", clientCount: 1 },
-  },
-  // ...add more
-]}
+        <p className="text-md md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          Helping businesses across continents build cutting-edge solutions in Web Development,
+          Artificial Intelligence, and Cloud Infrastructure. Our network spans industries and borders — powering tomorrow's tech, today.
+        </p>
+      </div>
 
-      />
+      <Suspense fallback={
+        <div className="w-full aspect-[2/1] bg-black rounded-lg relative font-sans pt-24 mt-20 flex items-center justify-center">
+          <div className="text-[#3fa7f5] text-lg">Loading global impact map...</div>
+        </div>
+      }>
+        <WorldMapUI
+          dots={[
+            // North America
+            {
+              start: NORTH_AMERICA_HUB,
+              end: { lat: 37.7749, lng: -122.4194, label: "United States", clientCount: 12 },
+            },
+            {
+              start: NORTH_AMERICA_HUB,
+              end: { lat: 43.6532, lng: -79.3832, label: "Canada", clientCount: 5 },
+            },
+            {
+              start: NORTH_AMERICA_HUB,
+              end: { lat: 19.4326, lng: -99.1332, label: "Mexico", clientCount: 3 },
+            },
+            
+            // South America
+            {
+              start: NORTH_AMERICA_HUB,
+              end: { lat: -15.7975, lng: -47.8919, label: "Brazil", clientCount: 4 },
+            },
+            {
+              start: NORTH_AMERICA_HUB,
+              end: { lat: -34.6037, lng: -58.3816, label: "Argentina", clientCount: 2 },
+            },
+            
+            // Europe
+            {
+              start: EUROPE_HUB,
+              end: { lat: 51.5074, lng: -0.1278, label: "United Kingdom", clientCount: 8 },
+            },
+            {
+              start: EUROPE_HUB,
+              end: { lat: 48.8566, lng: 2.3522, label: "France", clientCount: 6 },
+            },
+            {
+              start: EUROPE_HUB,
+              end: { lat: 52.5200, lng: 13.4050, label: "Germany", clientCount: 7 },
+            },
+            
+            // Asia - Adjusted coordinates
+            {
+              start: ASIA_HUB,
+              end: { lat: 28.6139, lng: 77.209, label: "India", clientCount: 15 }, // Delhi coordinates
+            },
+            {
+              start: ASIA_HUB,
+              end: { lat: 35.6762, lng: 139.6503, label: "Japan", clientCount: 6 },
+            },
+            {
+              start: ASIA_HUB,
+              end: { lat: 1.3521, lng: 103.8198, label: "Singapore", clientCount: 5 },
+            },
+            
+            // Africa
+            {
+              start: EUROPE_HUB,
+              end: { lat: -1.2921, lng: 36.8219, label: "Kenya", clientCount: 3 },
+            },
+            {
+              start: EUROPE_HUB,
+              end: { lat: -33.9249, lng: 18.4241, label: "South Africa", clientCount: 4 },
+            },
+            
+            // Australia
+            {
+              start: ASIA_HUB,
+              end: { lat: -33.8688, lng: 151.2093, label: "Australia", clientCount: 7 },
+            },
+          ]}
+        />
+      </Suspense>
     </div>
   );
 }
 
-export default WorldMap;
+export default memo(WorldMap);

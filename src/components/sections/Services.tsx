@@ -200,7 +200,7 @@ const Services: React.FC = () => {
     >
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 relative">
-          <h2 className="text-3xl font-bold text-center mb-4">
+          <h2 className="font-bold text-3xl md:text-5xl text-white mb-4">
             Our <span className="text-[#3fa7f5]">Services</span>
           </h2>
 

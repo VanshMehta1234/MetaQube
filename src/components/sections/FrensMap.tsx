@@ -371,7 +371,7 @@ const FrensMap: React.FC = () => {
           <h2 className={`text-3xl sm:text-5xl font-bold mb-4 ${
             metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
           }`}>
-            Our <span className="text-metaEmerald-600 bg-clip-text bg-gradient-to-r from-metaEmerald-500 to-metaEmerald-700">Frens</span>
+            Our <span className="text-[#3fa7f5]">Frens</span>
           </h2>
           <p className={`text-base sm:text-xl max-w-2xl mx-auto ${
             metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-800'
