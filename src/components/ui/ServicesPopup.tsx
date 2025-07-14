@@ -225,7 +225,7 @@ const ServicesPopup: React.FC = () => {
                       {serviceCategories[activeCategory].subCategories.map((subCategory, idx) => (
                         <motion.a
                           key={idx}
-                          href={`#${serviceCategories[activeCategory].title.toLowerCase().replace(/\s+/g, '-')}-${subCategory.title.toLowerCase().replace(/\s+/g, '-')}`}
+                          href={`#services`}
                           className="flex items-center space-x-2 p-2 rounded-lg hover:bg-deepCosmos-700/50 group"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
