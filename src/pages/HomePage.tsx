@@ -5,6 +5,7 @@ import BuildYourQube from '../components/sections/BuildYourQube';
 import FrensMap from '../components/sections/FrensMap';
 import ContactCTA from '../components/sections/ContactCTA';
 import JVectorWorldMapSection from '../components/sections/JVectorWorldMapSection';
+import Projects from '../components/sections/Projects';
 
 const HomePage: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const HomePage: React.FC = () => {
       <BuildYourQube />
       <JVectorWorldMapSection />
       <FrensMap />
+      {/* <Projects /> */}
       <ContactCTA />
     </main>
   );

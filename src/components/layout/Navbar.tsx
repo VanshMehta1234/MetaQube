@@ -23,6 +23,7 @@ const Navbar: React.FC = () => {
   }, [scrolled]);
   
   const navLinks = [
+    { name: 'Services', href: '#services'},
     { name: 'Inquire', href: '#build-qube' },
     { name: 'Reach',href: '#global-reach'},
     { name: 'Work', href: '#frens' },
@@ -87,7 +88,7 @@ const Navbar: React.FC = () => {
             {/* Desktop menu */}
             <div className="hidden md:flex items-center space-x-8">
               <div className="flex space-x-8">
-                <ServicesPopup />
+                {/* <ServicesPopup /> */}
                 
                 {navLinks.map((link) => (
                   <motion.a
@@ -156,18 +157,6 @@ const Navbar: React.FC = () => {
             >
               <div className="container mx-auto px-4 py-4">
                 <div className="flex flex-col space-y-4">
-                  <motion.button
-                    className={`text-left font-medium py-3 px-4 rounded-lg transition-all ${
-                      metaMirrorMode 
-                        ? 'text-prismWhite/90 hover:bg-metaEmerald-500/10 hover:text-metaEmerald-500' 
-                        : 'text-deepCosmos-900/90 hover:bg-metaEmerald-500/5 hover:text-metaEmerald-700'
-                    }`}
-                    onClick={handleOpenMobileServices}
-                    whileHover={{ x: 5 }}
-                  >
-                    Services
-                  </motion.button>
-                  
                   {navLinks.map((link) => (
                     <motion.a
                       key={link.name}

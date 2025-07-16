@@ -1,48 +1,27 @@
 import React, { lazy, Suspense, memo } from "react";
 import { motion } from "motion/react";
+import { useAppStore } from "../../store/useAppStore";
 
 // Lazy load the JVectorWorldMap component for better performance
 const JVectorWorldMap = lazy(() => import("../ui/JVectorWorldMap"));
 
 const JVectorWorldMapSection: React.FC = () => {
+  const metaMirrorMode = useAppStore();
   return (
     <section id="global-reach">
       <div className="py-24 dark:bg-black bg-white w-full">
-        <div className="max-w-7xl mx-auto text-center mb-16">
-          <h2 className="font-bold text-2xl md:text-5xl text-white mb-4">
-            <motion.span
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              Global&nbsp;
-            </motion.span>
-            <motion.span
-              className="text-[#3fa7f5]"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Reach&nbsp;
-            </motion.span>
-            <motion.span
-              className="text-[#3fa7f5]"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              & Impact
-            </motion.span>
+        <div className="text-center mb-16 relative">
+          <h2 className={`font-bold text-3xl sm:text-4xl md:text-5xl mb-3 ${
+            metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
+          }`}>
+            Global <span className="text-metaEmerald-500">Reach & Impact</span>
           </h2>
-
-          <p className="text-md md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Helping businesses across continents build cutting-edge solutions in
-            Web Development, Artificial Intelligence, and Cloud Infrastructure.
-            Our network spans industries and borders — powering tomorrow's tech,
-            today.
+          <p className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto ${
+            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
+          }`}>
+             Powering global innovation in Web, AI, and Cloud — one solution at a time.
           </p>
         </div>
-
         <div className="max-w-7xl mx-auto aspect-[2/1] rounded-lg overflow-hidden">
           <Suspense
             fallback={

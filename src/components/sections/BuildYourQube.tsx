@@ -90,20 +90,30 @@ const BuildYourQube: React.FC = () => {
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className={`text-5xl font-bold mb-6 ${
-            metaMirrorMode 
-              ? 'text-prismWhite' 
-              : 'bg-clip-text text-transparent bg-gradient-to-r from-black via-black to-gray-900'
+        <div className="text-center mb-16 relative">
+          {/* <h2 className={`font-bold text-2xl md:text-5xl mb-4 ${
+            metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
           }`}>
             Build Your Own <span className={"text-[#3fa7f5]"}>Qube</span>
           </h2>
           <p className={`text-xl max-w-2xl mx-auto ${
-            metaMirrorMode ? 'text-quantumGrey-300' : 'text-gray-700'
+            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
+          }`}>
+            Select the use cases that match your needs, and we'll craft a custom solution that transcends traditional spaces.
+          </p> */}
+
+          <h2 className={`font-bold text-3xl sm:text-4xl md:text-5xl mb-3 ${
+            metaMirrorMode ? 'text-prismWhite' : 'text-deepCosmos-900'
+          }`}>
+            Build Your Own <span className="text-metaEmerald-500">Qube</span>
+          </h2>
+          <p className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto ${
+            metaMirrorMode ? 'text-quantumGrey-300' : 'text-deepCosmos-600'
           }`}>
             Select the use cases that match your needs, and we'll craft a custom solution that transcends traditional spaces.
           </p>
         </div>
+        
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-16">
           {qubeOptions.map((option) => (
