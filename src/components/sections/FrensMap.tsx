@@ -77,7 +77,7 @@ const frens = [
 const categories = Array.from(new Set(frens.map((fren) => fren.category)));
 
 // Threshold for when to use a carousel instead of grid
-const CAROUSEL_THRESHOLD = 4;
+const CAROUSEL_THRESHOLD = window.innerWidth < 768 ? 999 : 6;
 
 const FrensMap: React.FC = () => {
   const { metaMirrorMode } = useAppStore();
@@ -283,7 +283,7 @@ const FrensMap: React.FC = () => {
       key={index !== undefined ? `${fren.id}-${index}` : fren.id}
       className={`px-2 pb-6 pt-2 ${
         shouldShowCarousel
-          ? "w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0"
+          ? "w-[280px] sm:w-[320px] md:w-[360px] flex-shrink-0"
           : ""
       }`}
       initial={{ opacity: 1 }}
@@ -493,15 +493,11 @@ const FrensMap: React.FC = () => {
           ) : (
             /* Grid display for fewer items */
             <div
-              className={`grid gap-6 max-w-7xl mx-auto ${
-                filteredFrens.length === 1
-                  ? "grid-cols-1 place-items-center"
-                  : filteredFrens.length === 2
-                  ? "grid-cols-1 sm:grid-cols-2 max-w-2xl"
-                  : filteredFrens.length === 3
-                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl"
-                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-              }`}
+            className={`grid gap-4 sm:gap-6 max-w-7xl mx-auto
+              grid-cols-1
+              ${filteredFrens.length === 2 ? 'sm:grid-cols-2'
+              : filteredFrens.length >= 3 ? 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : ''}`}
             >
               {filteredFrens.map((fren) => renderCompanyCard(fren))}
             </div>

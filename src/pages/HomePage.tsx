@@ -6,16 +6,19 @@ import FrensMap from '../components/sections/FrensMap';
 import ContactCTA from '../components/sections/ContactCTA';
 import JVectorWorldMapSection from '../components/sections/JVectorWorldMapSection';
 import Projects from '../components/sections/Projects';
+// import ToggleButton from '../components/ui/ToggleButton';
 
 const HomePage: React.FC = () => {
   return (
     <main>
+
       <Hero />
+      {/* <ToggleButton /> */}
       <Services />
       <BuildYourQube />
+      <Projects />
       <JVectorWorldMapSection />
       <FrensMap />
-      {/* <Projects /> */}
       <ContactCTA />
     </main>
   );

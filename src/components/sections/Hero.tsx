@@ -6,6 +6,7 @@ import { useAppStore } from "../../store/useAppStore";
 import { useMousePosition } from "../../hooks/useMousePosition";
 import { Boxes } from "../ui/background-boxes";
 import { useMediaQuery } from "react-responsive";
+import ToggleButton from "../ui/ToggleButton";
 
 // Animation variants
 const containerVariants = {
@@ -289,6 +290,7 @@ const Hero: React.FC = () => {
           </motion.a>
         </div>
       </main>
+      <ToggleButton />
     </section>
   );
 };
