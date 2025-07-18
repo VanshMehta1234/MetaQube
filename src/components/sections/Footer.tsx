@@ -62,12 +62,12 @@ const Footer: React.FC = () => {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-3 group">
+              {/* <div className="flex items-center space-x-3 group">
                 <Phone className={`${metaMirrorMode ? 'text-metaEmerald-600' : 'text-metaEmerald-700'} flex-shrink-0 group-hover:text-metaEmerald-500 transition-colors`} size={18} />
                 <a href="tel:+919054907333" className="text-quantumGrey-300 hover:text-metaEmerald-600 transition-colors text-base">
                   +91 905 490 7333
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
           
