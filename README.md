@@ -1,7 +1,3 @@
-# METAQUBE
-
-![METAQUBE Logo](./public/metaqube-logo.png)
-
 ## Overview
 
 METAQUBE is a cutting-edge digital experience platform that transcends traditional digital spaces and accelerates innovation. Built with modern web technologies, METAQUBE offers a seamless blend of Web3 capabilities, metaverse experiences, and rich interactive UI.  
