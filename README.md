@@ -21,6 +21,12 @@ MetaQube is a frontend showcase for presenting technology services through an ex
 
 **Scope of this repository:** a React/Vite marketing website. Although the site discusses AI, Web3, and metaverse services, this checkout does not implement wallet authentication, blockchain transactions, an AI chat backend, or persisted customer accounts.
 
+## Screenshot
+
+Public homepage of the hosted website, showing the 3D hero and service introduction.
+
+![MetaQube homepage with a 3D hero, Web3 branding, and service navigation](https://github.com/user-attachments/assets/36637d7d-b03f-4cc3-8841-d9bbd6b5fe8b)
+
 ## What to explore
 
 | Experience | Implementation focus |
